@@ -8,6 +8,8 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 
+import java.lang.reflect.Field;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -27,8 +29,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
@@ -36,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   private RobotConfig config;
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -61,10 +69,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
   private final PIDController m_turningController = new PIDController(
-      DriveConstants.kTurningP, DriveConstants.kTurningI, DriveConstants.kTurningD);
+    DriveConstants.kTurningP, DriveConstants.kTurningI, DriveConstants.kTurningD);
   
-    
-
   LimelightHelpers.PoseEstimate limelightMeasurement;
 
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -78,15 +84,15 @@ public class DriveSubsystem extends SubsystemBase {
     },
     getPose());
 
-  /** Creates a new DriveSubsystem. */
+
   public DriveSubsystem() {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
-    LimelightHelpers.SetRobotOrientation("", getHeading(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("", 180, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     // Get the pose estimate
-    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
+    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
 
     m_turningController.enableContinuousInput(-Math.PI, Math.PI);
     m_turningController.setTolerance(Math.toRadians(1.0));
@@ -147,9 +153,9 @@ public class DriveSubsystem extends SubsystemBase {
       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
       m_poseEstimator.addVisionMeasurement(
       limelightMeasurement.pose,
-      limelightMeasurement.timestampSeconds
-    );
+      limelightMeasurement.timestampSeconds);
     }
+    
 
   }
 

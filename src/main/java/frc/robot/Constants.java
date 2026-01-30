@@ -60,6 +60,12 @@ public final class Constants {
     public static double kTurningP;
     public static double kTurningI;
     public static double kTurningD;
+
+    public static double kDrivingP;
+    public static double kDrivingI;
+    public static double kDrivingD;
+    public static double kDrivingkV;
+
   }
 
   public static final class ModuleConstants {

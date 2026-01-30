@@ -13,6 +13,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
@@ -74,6 +78,12 @@ public class RobotContainer {
         ? stream.filter(auto -> auto.getName().startsWith("comp"))
         : stream
     );
+
+    StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
+      .getStructTopic("MyPose", Pose2d.struct).publish();
+    StructArrayPublisher<Pose2d> arrayPublisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

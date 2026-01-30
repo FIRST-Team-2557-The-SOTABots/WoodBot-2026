@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -9,7 +11,7 @@ import frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
-        public static final SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        public static final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();
         public static final SparkMaxConfig turningConfig = new SparkMaxConfig();
 
         static {
@@ -20,18 +22,30 @@ public final class Configs {
             double nominalVoltage = 12.0;
             double drivingVelocityFeedForward = nominalVoltage / ModuleConstants.kDriveWheelFreeSpeedRps;
 
-            drivingConfig
-                    .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(50);
-            drivingConfig.encoder
-                    .positionConversionFactor(drivingFactor) // meters
-                    .velocityConversionFactor(drivingFactor / 60.0); // meters per second
-            drivingConfig.closedLoop
-                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                    // These are example gains you may need to them for your own robot!
-                    .pid(0.04, 0, 0)
-                    .outputRange(-1, 1)
-                    .feedForward.kV(drivingVelocityFeedForward);
+
+                // Configure PID values for velocity control
+                drivingConfig.Slot0.kP = Constants.DriveConstants.kDrivingP; // Adjust these values for your robot
+                drivingConfig.Slot0.kI = Constants.DriveConstants.kDrivingI;
+                drivingConfig.Slot0.kD = Constants.DriveConstants.kDrivingD;
+                drivingConfig.Slot0.kV = Constants.DriveConstants.kDrivingkV; // Feedforward gain
+    
+                // Configure motor output
+                drivingConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+                drivingConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
+                drivingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+                
+        //     drivingConfig
+        //             .idleMode(IdleMode.kBrake)
+        //             .smartCurrentLimit(50);
+        //     drivingConfig.encoder
+        //             .positionConversionFactor(drivingFactor) // meters
+        //             .velocityConversionFactor(drivingFactor / 60.0); // meters per second
+        //     drivingConfig.closedLoop
+        //             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        //             // These are example gains you may need to them for your own robot!
+        //             .pid(0.04, 0, 0)
+        //             .outputRange(-1, 1)
+        //             .feedForward.kV(drivingVelocityFeedForward);
 
             turningConfig
                     .idleMode(IdleMode.kBrake)
