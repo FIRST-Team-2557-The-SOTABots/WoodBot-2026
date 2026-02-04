@@ -108,11 +108,17 @@ public class MAXSwerveModule {
     correctedDesiredState.optimize(new Rotation2d(m_turningEncoder.getPosition()));
 
     // Command driving and turning SPARKS towards their respective setpoints.
-    m_drivingClosedLoopController.setSetpoint(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
-    m_drivingTalonFX.setControl(m_drivingVelocityRequest.withVelocity(correctedDesiredState.speedMetersPerSecond));
+    m_drivingTalonFX.setControl(m_drivingVelocityRequest.withVelocity(KrakenConvertion(correctedDesiredState.speedMetersPerSecond)));
     m_turningClosedLoopController.setSetpoint(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
     m_desiredState = desiredState;
+  }
+
+  public double KrakenConvertion(double speedMetersPerSecond) {
+    double wheelCircumference = Constants.ModuleConstants.kWheelCircumferenceMeters;
+    double driveReduction = Constants.ModuleConstants.kDrivingMotorReduction;
+    double motorRPM = ((speedMetersPerSecond * 60)/wheelCircumference) * driveReduction;
+    return motorRPM;
   }
 
   /** Zeroes all the SwerveModule encoders. */
