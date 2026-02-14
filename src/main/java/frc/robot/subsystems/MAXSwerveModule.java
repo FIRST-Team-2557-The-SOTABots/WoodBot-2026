@@ -33,6 +33,8 @@ public class MAXSwerveModule {
   private final SparkClosedLoopController m_turningClosedLoopController;
   private VelocityVoltage m_drivingVelocityRequest;
 
+  private SwerveModuleState correctedDesiredState;
+
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
@@ -100,7 +102,7 @@ public class MAXSwerveModule {
    */
   public void setDesiredState(SwerveModuleState desiredState) {
     // Apply chassis angular offset to the desired state.
-    SwerveModuleState correctedDesiredState = new SwerveModuleState();
+    correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 
@@ -114,6 +116,7 @@ public class MAXSwerveModule {
     m_desiredState = desiredState;
   }
 
+
   public double KrakenConvertion(double speedMetersPerSecond) {
     double wheelCircumference = Constants.ModuleConstants.kWheelCircumferenceMeters;
     double driveReduction = Constants.ModuleConstants.kDrivingMotorReduction;
@@ -121,9 +124,23 @@ public class MAXSwerveModule {
     return motorRPM;
   }
 
+  public double getRequestedMPS(){
+    if (correctedDesiredState != null){
+      return correctedDesiredState.speedMetersPerSecond;
+    }else{
+      return 0.0;
+    }
+  }
+
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
     m_drivingTalonFX.setPosition(0);
+  }
+
+  public double getDriveSpeedMPS(){
+    double wheelCircumference = Constants.ModuleConstants.kWheelCircumferenceMeters;
+    double driveReduction = Constants.ModuleConstants.kDrivingMotorReduction;
+    return (((getDriveVelocityRPM() / driveReduction) * wheelCircumference)/60);
   }
 
   public double getDriveVelocityRPM() {

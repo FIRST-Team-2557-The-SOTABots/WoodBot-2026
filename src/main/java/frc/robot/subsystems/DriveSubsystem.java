@@ -18,6 +18,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -29,11 +30,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -89,10 +93,10 @@ public class DriveSubsystem extends SubsystemBase {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
-    LimelightHelpers.SetRobotOrientation("", 180, 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("Limlight-Rebuilt", 180, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     // Get the pose estimate
-    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
+    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("Limlight-Rebuilt");
 
     m_turningController.enableContinuousInput(-Math.PI, Math.PI);
     m_turningController.setTolerance(Math.toRadians(1.0));
@@ -136,6 +140,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
+    SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveSpeedMPS());
+    SmartDashboard.putNumber("acutle RPM", m_frontLeft.getDriveVelocityRPM());
 
     // Update the pose estimator in the periodic block
     m_poseEstimator.update(
@@ -146,15 +153,31 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-    if (limelightMeasurement == null) {
-      
-    }else {
-      // Add it to your pose estimator
-      m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-      m_poseEstimator.addVisionMeasurement(
-      limelightMeasurement.pose,
-      limelightMeasurement.timestampSeconds);
-    }
+
+  //  LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
+  //   LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getLimelightHeading(),
+  //       0, 0, 0, 0, 0);
+  //   boolean doRejectUpdate = false;
+
+    // if (mt2 == null) {
+    //   doRejectUpdate = true;
+    //   //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+    // } else {
+    //   if (Math.abs(m_gyro.getRate()) > 720) {
+    //     doRejectUpdate = true;
+    //   }
+    //   if (mt2.tagCount == 0) {
+    //     doRejectUpdate = true;
+    //   }
+    // }
+
+    // if (!doRejectUpdate) {
+    //   arrayPublisher.set(new Pose2d[] { getPose(), mt2.pose });
+    //   Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
+    //   m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
+    //   m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+    //   arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
+    // }
     
 
   }
