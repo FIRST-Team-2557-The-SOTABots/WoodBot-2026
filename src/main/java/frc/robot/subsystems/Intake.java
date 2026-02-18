@@ -30,8 +30,15 @@ public class Intake extends SubsystemBase {
       com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
 
 
-    intake.configure(intakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    intakeROT.configure(intakeRotConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    intake.configure(
+      intakeConfig,
+     ResetMode.kNoResetSafeParameters,
+     PersistMode.kPersistParameters);
+
+    intakeROT.configure(
+      intakeRotConfig,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kPersistParameters);
   }
 
   @Override
