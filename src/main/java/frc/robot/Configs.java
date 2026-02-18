@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import frc.robot.Constants.ModuleConstants;
 
@@ -71,6 +72,23 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+        }
+    }
+
+    public static final class ClimberConfigs {
+        public static final SparkFlexConfig leftClimberConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig rightClimberConfig = new SparkFlexConfig();
+
+        static {
+            leftClimberConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(40)
+                    .inverted(true);
+            rightClimberConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(40)
+                    .inverted(false);
+
         }
     }
 }
