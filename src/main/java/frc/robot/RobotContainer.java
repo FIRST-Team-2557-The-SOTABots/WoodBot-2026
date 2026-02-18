@@ -75,7 +75,7 @@ public class RobotContainer {
     // competition as defined by the programmer
     autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
       (stream) -> isCompetition
-        ? stream.filter(auto -> auto.getName().startsWith("comp"))
+        ? stream.filter(auto -> auto.getName().startsWith(""))
         : stream
     );
 

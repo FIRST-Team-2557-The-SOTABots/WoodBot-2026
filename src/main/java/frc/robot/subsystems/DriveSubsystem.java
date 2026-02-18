@@ -141,7 +141,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
-    SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveSpeedMPS());
+    SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveWheelSpeedMPS());
     SmartDashboard.putNumber("acutle RPM", m_frontLeft.getDriveVelocityRPM());
 
     // Update the pose estimator in the periodic block

@@ -108,4 +108,25 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static final class ShooterConstants {
+    public static final int kShooterFlyWheelLeftCanId = 12;
+    public static final int kShooterFlyWheelMiddleCanId = 13;
+    public static final int kShooterFlyWheelRightCanId = 14;
+    public static final int kShooterDeliveryCanId = 15;
+  }
+
+  public static final class IntakeConstants {
+    public static final int kIntakeIntakeCanId = 10;
+    public static final int kIntakeROTCanId = 9;
+  }
+
+  public static final class DeliveryConstants {
+    public static final int kIndexerCanId = 11;
+  }
+
+  public static final class ClimberConstants {
+    public static final int kClimberLeftCanId = 16;
+    public static final int kClimberRightCanId = 17;
+  }
 }

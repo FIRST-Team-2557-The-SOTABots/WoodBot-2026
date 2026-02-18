@@ -78,7 +78,7 @@ public class MAXSwerveModule {
   public SwerveModuleState getState() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return new SwerveModuleState(getDriveVelocityRPM(),
+    return new SwerveModuleState(getDriveWheelSpeedMPS(),
         new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
   }
 
@@ -91,7 +91,7 @@ public class MAXSwerveModule {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModulePosition(
-        getDrivePosition(),
+        getDriveWheelPositionMeters(),
         new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
   }
 
@@ -137,10 +137,16 @@ public class MAXSwerveModule {
     m_drivingTalonFX.setPosition(0);
   }
 
-  public double getDriveSpeedMPS(){
+  public double getDriveWheelSpeedMPS(){
     double wheelCircumference = Constants.ModuleConstants.kWheelCircumferenceMeters;
     double driveReduction = Constants.ModuleConstants.kDrivingMotorReduction;
     return (((getDriveVelocityRPM() / driveReduction) * wheelCircumference)/60);
+  }
+
+  public double getDriveWheelPositionMeters(){
+    double wheelCircumference = Constants.ModuleConstants.kWheelCircumferenceMeters;
+    double driveReduction = Constants.ModuleConstants.kDrivingMotorReduction;
+    return ((getDrivePosition() / driveReduction) * wheelCircumference);
   }
 
   public double getDriveVelocityRPM() {
