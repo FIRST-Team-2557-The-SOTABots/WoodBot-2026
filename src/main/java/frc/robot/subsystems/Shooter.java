@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Configs;
 import frc.robot.Constants;
 
 import com.revrobotics.PersistMode;
@@ -12,6 +13,8 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -21,10 +24,12 @@ public class Shooter extends SubsystemBase {
   private SparkFlex shooterFlyWheelRight;
   private SparkFlex shooterDelivery;
 
-  private SparkFlexConfig shooterFlyWheelLeftConfig = new SparkFlexConfig();
-  private SparkFlexConfig shooterFlyWheelMiddleConfig = new SparkFlexConfig();
-  private SparkFlexConfig shooterFlyWheelRightConfig = new SparkFlexConfig();
-  private SparkFlexConfig shooterDeliveryConfig = new SparkFlexConfig();
+  private SparkFlexConfig shooterFlyWheelLeftConfig;
+  private SparkFlexConfig shooterFlyWheelMiddleConfig;
+  private SparkFlexConfig shooterFlyWheelRightConfig;
+  private SparkFlexConfig shooterDeliveryConfig;
+
+  private PIDController shooterFlyWheelPIDController;
 
   /** Creates a new ShooterFlyWheels. */
   public Shooter() {
@@ -39,10 +44,16 @@ public class Shooter extends SubsystemBase {
     shooterFlyWheelRight = new SparkFlex(
       Constants.ShooterConstants.kShooterFlyWheelRightCanId,
      MotorType.kBrushless);
-     
+
     shooterDelivery = new SparkFlex(
       Constants.ShooterConstants.kShooterDeliveryCanId, 
       MotorType.kBrushless);
+
+
+    shooterFlyWheelLeftConfig = Configs.ShooterConfigs.ShooterFlyWheelLeftConfig;
+    shooterFlyWheelMiddleConfig = Configs.ShooterConfigs.ShooterFlyWheelMiddleConfig;
+    shooterFlyWheelRightConfig = Configs.ShooterConfigs.ShooterFlyWheelRightConfig;
+    shooterDeliveryConfig = Configs.ShooterConfigs.ShooterDeliveryConfig;
 
 
     shooterFlyWheelLeft.configure(
@@ -64,6 +75,25 @@ public class Shooter extends SubsystemBase {
       shooterDeliveryConfig,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kPersistParameters);
+  }
+
+  // Set the voltage of the flywheel motors to control the speed of the flywheels
+  public void setFlyWheelVoltage(double voltage) {
+    shooterFlyWheelLeft.setVoltage(voltage);
+    shooterFlyWheelMiddle.setVoltage(voltage);
+    shooterFlyWheelRight.setVoltage(voltage);
+  }
+
+  // Set the voltage of the delivery motor to control the speed of the delivery mechanism
+  public void setDeliveryVoltage(double voltage) {
+    shooterDelivery.setVoltage(voltage);
+  }
+
+  //average the velocity of the three flywheels to get a more accurate reading of the flywheel speed
+  public double getFlyWheelVelocity() {
+    return (shooterFlyWheelLeft.getEncoder().getVelocity() +
+           shooterFlyWheelMiddle.getEncoder().getVelocity() +
+           shooterFlyWheelRight.getEncoder().getVelocity()) / 3.0;
   }
 
   @Override

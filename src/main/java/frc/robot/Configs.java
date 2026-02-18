@@ -4,7 +4,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.ModuleConstants;
@@ -34,18 +36,6 @@ public final class Configs {
                 drivingConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
                 drivingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                 
-        //     drivingConfig
-        //             .idleMode(IdleMode.kBrake)
-        //             .smartCurrentLimit(50);
-        //     drivingConfig.encoder
-        //             .positionConversionFactor(drivingFactor) // meters
-        //             .velocityConversionFactor(drivingFactor / 60.0); // meters per second
-        //     drivingConfig.closedLoop
-        //             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        //             // These are example gains you may need to them for your own robot!
-        //             .pid(0.04, 0, 0)
-        //             .outputRange(-1, 1)
-        //             .feedForward.kV(drivingVelocityFeedForward);
 
             turningConfig
                     .idleMode(IdleMode.kBrake)
@@ -71,6 +61,36 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+        }
+    }
+
+    public static final class ShooterConfigs{
+        public static final SparkFlexConfig ShooterFlyWheelLeftConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig ShooterFlyWheelMiddleConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig ShooterFlyWheelRightConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig ShooterDeliveryConfig = new SparkFlexConfig();
+
+        static {
+            ShooterFlyWheelLeftConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(true)
+                .smartCurrentLimit(40);
+
+            ShooterFlyWheelMiddleConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(false)
+                .smartCurrentLimit(40);
+
+            ShooterFlyWheelRightConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(false)
+                .smartCurrentLimit(40);
+
+            ShooterDeliveryConfig
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .smartCurrentLimit(40);
+
         }
     }
 }
