@@ -141,5 +141,14 @@ public final class Constants {
   public static final class ClimberConstants {
     public static final int kClimberLeftCanId = 16;
     public static final int kClimberRightCanId = 17;
+      // PID gains for climber position control (encoder units -> position)
+      // Tweak these on the real robot. Defaults are conservative placeholders.
+      public static final double kClimberP = 1.0;
+      public static final double kClimberI = 0.0;
+      public static final double kClimberD = 0.0;
+      // Position tolerance (same units as encoder position). Adjust as needed.
+      public static final double kClimberPositionTolerance = 0.01;
+      // Maximum voltage to apply when using position control
+      public static final double kClimberMaxVoltage = 12.0;
   }
 }
