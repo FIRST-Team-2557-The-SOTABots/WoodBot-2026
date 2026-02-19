@@ -34,7 +34,7 @@ public final class Configs {
     
                 // Configure motor output
                 drivingConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-                drivingConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
+                drivingConfig.CurrentLimits.SupplyCurrentLimit = 50.0;
                 drivingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                 
 
@@ -93,8 +93,47 @@ public final class Configs {
                 .smartCurrentLimit(40);
             }
     }
-          
-          
+
+    public static final class IntakeConfigs {
+        public static final SparkFlexConfig intakeConfig = new SparkFlexConfig();
+        public static final SparkMaxConfig intakeROTConfig = new SparkMaxConfig();
+
+        static {
+            intakeConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(40)
+                    .inverted(false);
+
+            intakeROTConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(40)
+                    .inverted(false);
+
+            intakeROTConfig.absoluteEncoder
+                    .inverted(false);
+
+            intakeROTConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                    .pid(
+                        Constants.IntakeConstants.kIntakeROTkP,
+                        Constants.IntakeConstants.kIntakeROTkI,
+                        Constants.IntakeConstants.kIntakeROTkD)
+                    .outputRange(-1, 1);
+                
+        }
+    }
+
+    public static final class DeliveryConfigs {
+        public static final SparkFlexConfig deliveryConfig = new SparkFlexConfig();
+
+        static {
+            deliveryConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(40)
+                    .inverted(false);
+        }
+    }
+              
     public static final class ClimberConfigs {
         public static final SparkFlexConfig leftClimberConfig = new SparkFlexConfig();
         public static final SparkFlexConfig rightClimberConfig = new SparkFlexConfig();
