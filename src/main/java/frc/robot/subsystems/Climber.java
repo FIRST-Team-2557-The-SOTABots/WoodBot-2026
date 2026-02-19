@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import frc.robot.Configs;
 
@@ -14,6 +15,10 @@ public class Climber extends SubsystemBase {
   // SparkFlexes
   private SparkFlex leftClimber;
   private SparkFlex rightClimber;
+
+  // Sensors
+  private DigitalInput leftHallSensor;
+  private DigitalInput rightHallSensor;
 
   // Configs for the SparkFlexes - loaded from Configs
   private SparkFlexConfig leftClimberConfig;
@@ -24,8 +29,16 @@ public class Climber extends SubsystemBase {
   private double targetPosition = 0.0;
   private boolean positionControlEnabled = false;
 
+  // Sensor Status variables
+  private boolean leftHallSensorTriggered = false;
+  private boolean rightHallSensorTriggered = false;
+
   /** Creates a new Climber. */
   public Climber() {
+    leftHallSensor = new DigitalInput(0);
+    rightHallSensor = new DigitalInput(1);
+
+
     leftClimber = new SparkFlex(
       Constants.ClimberConstants.kClimberLeftCanId, 
       com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
@@ -72,6 +85,17 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
+      isLeftHallSensorTriggered();
+      isRightHallSensorTriggered();
+
+      if (rightHallSensorTriggered) {
+        stopRight();
+      }
+
+      if (leftHallSensorTriggered) {
+        stopLeft();
+      }
+
       // This method will be called once per scheduler run
       if (positionControlEnabled) {
 
@@ -146,5 +170,32 @@ public class Climber extends SubsystemBase {
     } catch (Exception ignore) {
     }
   }
+
+
+  public void stop() {
+    setVoltage(0.0);
+    disablePositionControl();
+  }
+
+  
+  public void stopRight() {
+    rightClimber.setVoltage(0);
+  }
+
+  public void stopLeft() {
+    leftClimber.setVoltage(0);
+  }
+
+  public boolean isLeftHallSensorTriggered() {
+    leftHallSensorTriggered = !leftHallSensor.get(); // Assuming active low
+    return leftHallSensorTriggered;
+  }
+
+
+  public boolean isRightHallSensorTriggered() {
+    rightHallSensorTriggered = !rightHallSensor.get(); // Assuming active low
+    return rightHallSensorTriggered;
+  }
+
 
 }
