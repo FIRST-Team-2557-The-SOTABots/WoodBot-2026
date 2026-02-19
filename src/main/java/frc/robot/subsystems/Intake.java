@@ -6,28 +6,50 @@ package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private SparkFlex intake;
-  private SparkFlex intakeROT;
+  private SparkMax intakeROT;
+
+  private SparkAbsoluteEncoder intakeEncoder;
+
+  private SparkClosedLoopController intakePID;
 
   private SparkFlexConfig intakeConfig;
-  private SparkFlexConfig intakeRotConfig;
+  private SparkMaxConfig intakeRotConfig;
+
+  private double intakePosition;
 
   public Intake() {
     intake = new SparkFlex(
       Constants.IntakeConstants.kIntakeIntakeCanId, 
       com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
 
-    intakeROT = new SparkFlex(
+    intakeROT = new SparkMax(
       Constants.IntakeConstants.kIntakeROTCanId, 
       com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+    
+
+    intakePID = intakeROT.getClosedLoopController();
+
+    intakeEncoder = intakeROT.getAbsoluteEncoder();
+
+
+    intakeConfig = Configs.IntakeConfigs.intakeConfig;
+    intakeRotConfig = Configs.IntakeConfigs.intakeROTConfig;
 
 
     intake.configure(
@@ -41,8 +63,20 @@ public class Intake extends SubsystemBase {
       PersistMode.kPersistParameters);
   }
 
+  public void setIntakeVoltage(double voltage) {
+    intake.setVoltage(voltage);
+  }
+
+  public double getIntakePosition() {
+    return intakeEncoder.getPosition();
+  }
+
+  public void setIntakePosition(double position) {
+    this.intakePosition = position;
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    intakePID.setSetpoint(intakePosition, ControlType.kPosition);
   }
 }

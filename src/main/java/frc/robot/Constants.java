@@ -122,10 +122,20 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeIntakeCanId = 10;
     public static final int kIntakeROTCanId = 9;
+
+    public static final double kIntakeROTkP = 0.0;
+    public static final double kIntakeROTkI = 0.0;
+    public static final double kIntakeROTkD = 0.0;
+
+    public static final double kIntakeRestingPosition = 0.0;
+    public static final double kIntakeDeployedPosition = 1.0;
+    public static final double kIntakeClimbingPosition = 0.5;
+    public static final double kIntakeTrenchPosition = 0.25;
+
   }
 
   public static final class DeliveryConstants {
-    public static final int kIndexerCanId = 11;
+    public static final int kDeliveryCanId = 11;
   }
 
   public static final class ClimberConstants {
