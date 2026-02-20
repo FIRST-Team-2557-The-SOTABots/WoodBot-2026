@@ -104,6 +104,9 @@ public class RobotContainer {
       () -> m_robotDrive.zeroHeading()
       , m_robotDrive));
 
+    m_driverController.a().whileTrue(new RunCommand(
+      () -> m_robotDrive.turnToFieldPoint(12, 3.8, m_driverController),
+       m_robotDrive));
       
   }
 

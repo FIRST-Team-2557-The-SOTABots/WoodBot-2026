@@ -57,7 +57,7 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 2;
 
     public static final boolean kGyroReversed = false;
-    public static double kTurningP = 0.1;
+    public static double kTurningP = 1.5;
     public static double kTurningI = 0;
     public static double kTurningD = 0;
 

@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class DriveSubsystem extends SubsystemBase {
   private RobotConfig config;
@@ -170,7 +171,7 @@ Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
         doRejectUpdate = true;
       }
     }
-
+//(:3)comp code fr chat on gregor
     if (!doRejectUpdate) {
       // arrayPublisher.set(new Pose2d[] { getPose(), mt2.pose });
       // Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
@@ -212,7 +213,7 @@ Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
         pose);
   }
 
-  public void turnToFieldPoint(double x, double y) {
+  public void turnToFieldPoint(double x, double y, CommandXboxController controller) {
     Pose2d pose = getPose();
 
     // Vector from robot to target
@@ -243,7 +244,7 @@ Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
     );
 
     // Rotate in place, field-relative
-    drive(0.0, 0.0, omega, true);
+    drive(-controller.getLeftY(), -controller.getLeftX(), omega, true);
 }
 
 
