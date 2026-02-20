@@ -154,30 +154,30 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
 
-  //  LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
-  //   LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getLimelightHeading(),
-  //       0, 0, 0, 0, 0);
-  //   boolean doRejectUpdate = false;
+   LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
+    LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getHeading() + 180,
+        0, 0, 0, 0, 0);
+    boolean doRejectUpdate = false;
 
-    // if (mt2 == null) {
-    //   doRejectUpdate = true;
-    //   //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
-    // } else {
-    //   if (Math.abs(m_gyro.getRate()) > 720) {
-    //     doRejectUpdate = true;
-    //   }
-    //   if (mt2.tagCount == 0) {
-    //     doRejectUpdate = true;
-    //   }
-    // }
+    if (mt2 == null) {
+      doRejectUpdate = true;
+      //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+    } else {
+      if (Math.abs(m_gyro.getRate()) > 720) {
+        doRejectUpdate = true;
+      }
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+    }
 
-    // if (!doRejectUpdate) {
-    //   arrayPublisher.set(new Pose2d[] { getPose(), mt2.pose });
-    //   Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
-    //   m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
-    //   m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-    //   arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
-    // }
+    if (!doRejectUpdate) {
+      // arrayPublisher.set(new Pose2d[] { getPose(), mt2.pose });
+      // Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
+      // m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
+      m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      // arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
+    }
     
 
   }

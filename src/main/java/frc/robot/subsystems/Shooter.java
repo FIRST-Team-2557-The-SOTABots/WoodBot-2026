@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,8 +32,16 @@ public class Shooter extends SubsystemBase {
 
   private PIDController shooterFlyWheelPIDController;
 
+  private DriveSubsystem kDrive;
+
+  private ShooterHood kShooterHood;
+
   /** Creates a new ShooterFlyWheels. */
-  public Shooter() {
+  public Shooter(DriveSubsystem kDrive, ShooterHood kShooterHood) {
+    this.kDrive = kDrive;
+    this.kShooterHood = kShooterHood;
+
+
     shooterFlyWheelLeft = new SparkFlex(
       Constants.ShooterConstants.kShooterFlyWheelLeftCanId,
       MotorType.kBrushless);
@@ -94,6 +103,14 @@ public class Shooter extends SubsystemBase {
     return (shooterFlyWheelLeft.getEncoder().getVelocity() +
            shooterFlyWheelMiddle.getEncoder().getVelocity() +
            shooterFlyWheelRight.getEncoder().getVelocity()) / 3.0;
+  }
+
+  public void shootStationary(double x, double y) {
+    Translation2d diff =
+        new Translation2d(x, y).minus(kDrive.getPose().getTranslation());
+
+    double distance = diff.getNorm();
+
   }
 
   @Override
