@@ -8,6 +8,8 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 
+
+import org.littletonrobotics.junction.Logger;
 import java.lang.reflect.Field;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -153,20 +155,18 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
 
    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
     LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getHeading() + 180,
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
-    if (mt2 == null) {
+    if (mt2 == null || mt2.tagCount == 0) {
       doRejectUpdate = true;
       //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
     } else {
       if (Math.abs(m_gyro.getRate()) > 720) {
-        doRejectUpdate = true;
-      }
-      if (mt2.tagCount == 0) {
         doRejectUpdate = true;
       }
     }
@@ -176,6 +176,7 @@ public class DriveSubsystem extends SubsystemBase {
       // Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
       // m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      Logger.recordOutput("greg", mt2.pose);
       // arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
     }
     
