@@ -61,47 +61,47 @@ public class Climber extends SubsystemBase {
         isLeftHallSensorTriggered();
         isRightHallSensorTriggered();
 
-        if (!positionControlEnabled) return;
+        // if (!positionControlEnabled) return;
 
-        double leftPos, rightPos;
-        try {
-            leftPos = leftClimber.getEncoder().getPosition();
-            rightPos = rightClimber.getEncoder().getPosition();
-        } catch (Exception ex) {
-            positionControlEnabled = false;
-            return;
-        }
+        // double leftPos, rightPos;
+        // try {
+        //     leftPos = leftClimber.getEncoder().getPosition();
+        //     rightPos = rightClimber.getEncoder().getPosition();
+        // } catch (Exception ex) {
+        //     positionControlEnabled = false;
+        //     return;
+        // }
 
-        double currentPos = (leftPos + rightPos) / 2.0;
-        double output = positionPid.calculate(currentPos, targetPosition);
+        // double currentPos = (leftPos + rightPos) / 2.0;
+        // double output = positionPid.calculate(currentPos, targetPosition);
 
-        // Limit max voltage (reduce overshoot)
-        double maxV = Constants.ClimberConstants.kClimberMaxVoltage;
-        output = Math.max(-maxV, Math.min(maxV, output));
+        // // Limit max voltage (reduce overshoot)
+        // double maxV = Constants.ClimberConstants.kClimberMaxVoltage;
+        // output = Math.max(-maxV, Math.min(maxV, output));
 
-        // Current readings
-        double leftCurrent = leftClimber.getOutputCurrent();
-        double rightCurrent = rightClimber.getOutputCurrent();
-        double bottomThreshold = Constants.ClimberConstants.kClimberBottomDetectCurrent;
+        // // Current readings
+        // double leftCurrent = leftClimber.getOutputCurrent();
+        // double rightCurrent = rightClimber.getOutputCurrent();
+        // double bottomThreshold = Constants.ClimberConstants.kClimberBottomDetectCurrent;
 
-        // Independent side clamping
-        double leftOutput = output;
-        double rightOutput = output;
+        // // Independent side clamping
+        // double leftOutput = output;
+        // double rightOutput = output;
 
-        // Clamp downward motion if hitting bottom
-        if (leftOutput < 0 && (leftHallSensorTriggered || leftCurrent > bottomThreshold)) leftOutput = 0;
-        if (rightOutput < 0 && (rightHallSensorTriggered || rightCurrent > bottomThreshold)) rightOutput = 0;
+        // // Clamp downward motion if hitting bottom
+        // if (leftOutput < 0 && (leftHallSensorTriggered || leftCurrent > bottomThreshold)) leftOutput = 0;
+        // if (rightOutput < 0 && (rightHallSensorTriggered || rightCurrent > bottomThreshold)) rightOutput = 0;
 
-        // Clamp upward motion if hitting top Hall sensor
-        if (leftOutput > 0 && leftHallSensorTriggered) leftOutput = 0;
-        if (rightOutput > 0 && rightHallSensorTriggered) rightOutput = 0;
+        // // Clamp upward motion if hitting top Hall sensor
+        // if (leftOutput > 0 && leftHallSensorTriggered) leftOutput = 0;
+        // if (rightOutput > 0 && rightHallSensorTriggered) rightOutput = 0;
 
-        // Reset integrator if fully clamped
-        if (leftOutput == 0 && rightOutput == 0) positionPid.reset();
+        // // Reset integrator if fully clamped
+        // if (leftOutput == 0 && rightOutput == 0) positionPid.reset();
 
-        // Apply voltage
-        leftClimber.setVoltage(leftOutput);
-        rightClimber.setVoltage(rightOutput);
+        // // Apply voltage
+        // leftClimber.setVoltage(leftOutput);
+        // rightClimber.setVoltage(rightOutput);
     }
 
     // Manual voltage control
@@ -155,7 +155,8 @@ public class Climber extends SubsystemBase {
 
     // Precoded motion commands (safe)
     public void toTop() {
-        setTargetPositionRotations(100.0); // small relative value
+        leftClimber.set(0.5);
+        rightClimber.set(0.5);
     }
 
     public void toBottom() {
