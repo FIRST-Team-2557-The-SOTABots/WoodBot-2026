@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -29,6 +32,9 @@ public class Climber extends SubsystemBase {
     private boolean leftHallSensorTriggered = false;
     private boolean rightHallSensorTriggered = false;
 
+    private final Debouncer m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kRising);
+    private double m_startTime = 0;
+
     public Climber() {
         leftHallSensor = new DigitalInput(0);
         rightHallSensor = new DigitalInput(1);
@@ -48,83 +54,33 @@ public class Climber extends SubsystemBase {
         leftClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         rightClimber.configure(rightClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-        positionPid = new PIDController(
-                Constants.ClimberConstants.kClimberP,
-                0, // I = 0 for climber
-                Constants.ClimberConstants.kClimberD
-        );
-        positionPid.setTolerance(Constants.ClimberConstants.kClimberPositionTolerance);
     }
 
     @Override
     public void periodic() {
         isLeftHallSensorTriggered();
         isRightHallSensorTriggered();
+        double timeRunning = Timer.getFPGATimestamp() - m_startTime;
+        if (timeRunning > 0.5 && getCurrent() > 20.0 && leftClimber.get() < 0) {
+            stop();
+        }
+    }
 
-        // if (!positionControlEnabled) return;
-
-        // double leftPos, rightPos;
-        // try {
-        //     leftPos = leftClimber.getEncoder().getPosition();
-        //     rightPos = rightClimber.getEncoder().getPosition();
-        // } catch (Exception ex) {
-        //     positionControlEnabled = false;
-        //     return;
-        // }
-
-        // double currentPos = (leftPos + rightPos) / 2.0;
-        // double output = positionPid.calculate(currentPos, targetPosition);
-
-        // // Limit max voltage (reduce overshoot)
-        // double maxV = Constants.ClimberConstants.kClimberMaxVoltage;
-        // output = Math.max(-maxV, Math.min(maxV, output));
-
-        // // Current readings
-        // double leftCurrent = leftClimber.getOutputCurrent();
-        // double rightCurrent = rightClimber.getOutputCurrent();
-        // double bottomThreshold = Constants.ClimberConstants.kClimberBottomDetectCurrent;
-
-        // // Independent side clamping
-        // double leftOutput = output;
-        // double rightOutput = output;
-
-        // // Clamp downward motion if hitting bottom
-        // if (leftOutput < 0 && (leftHallSensorTriggered || leftCurrent > bottomThreshold)) leftOutput = 0;
-        // if (rightOutput < 0 && (rightHallSensorTriggered || rightCurrent > bottomThreshold)) rightOutput = 0;
-
-        // // Clamp upward motion if hitting top Hall sensor
-        // if (leftOutput > 0 && leftHallSensorTriggered) leftOutput = 0;
-        // if (rightOutput > 0 && rightHallSensorTriggered) rightOutput = 0;
-
-        // // Reset integrator if fully clamped
-        // if (leftOutput == 0 && rightOutput == 0) positionPid.reset();
-
-        // // Apply voltage
-        // leftClimber.setVoltage(leftOutput);
-        // rightClimber.setVoltage(rightOutput);
+    public double getCurrent() {
+        double leftCurrent = leftClimber.getOutputCurrent();
+        double rightCurrent = rightClimber.getOutputCurrent();
+        return (leftCurrent + rightCurrent) / 2.0;
     }
 
     // Manual voltage control
     public void setVoltage(double voltage) {
+        // Record start time to bypass the periodic kill-switch during the initial spike
+        if (voltage != 0 && leftClimber.getAppliedOutput() == 0) {
+            m_startTime = Timer.getFPGATimestamp();
+        }
         leftClimber.setVoltage(voltage);
         rightClimber.setVoltage(voltage);
     }
-
-    // PID control
-    public void setTargetPositionRotations(double position) {
-        targetPosition = position;
-        positionPid.reset();
-        positionControlEnabled = true;
-    }
-
-    public void disablePositionControl() { positionControlEnabled = false; }
-
-    public void enablePositionControl() {
-        positionPid.reset();
-        positionControlEnabled = true;
-    }
-
-    public boolean atSetpoint() { return positionPid.atSetpoint(); }
 
     // Encoder (never re-zeroed in match)
     public void zeroEncoders() {
@@ -135,7 +91,6 @@ public class Climber extends SubsystemBase {
     // Emergency stop
     public void eStop() {
         setVoltage(0.0);
-        disablePositionControl();
     }
 
     public void stop() {
@@ -153,6 +108,10 @@ public class Climber extends SubsystemBase {
         return rightHallSensorTriggered;
     }
 
+    public boolean isStalled() {
+        return m_debouncer.calculate(getCurrent() > 20.0);
+    }
+
     // Precoded motion commands (safe)
     public void toTop() {
         leftClimber.set(0.5);
@@ -160,6 +119,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void toBottom() {
-        setTargetPositionRotations(-100.0); // small relative value
+        leftClimber.set(-0.5);
+        rightClimber.set(-0.5);
     }
 }
