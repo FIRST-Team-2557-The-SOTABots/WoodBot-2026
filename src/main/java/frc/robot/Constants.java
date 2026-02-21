@@ -140,5 +140,10 @@ public final class Constants {
       public static final double kClimberPositionTolerance = 0.01;
       // Maximum voltage to apply when using position control
       public static final double kClimberMaxVoltage = 12.0;
+      public static final double kClimberMaxAmp = 40.0; // Max current to prevent motor damage
+
+      public static final double kClimberBottomDetectCurrent = 60.0;
+      public static final int kBottomDetectLoops = 6; // ~120ms
+      
   }
 }

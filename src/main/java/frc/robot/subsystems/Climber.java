@@ -12,190 +12,153 @@ import frc.robot.Constants;
 import frc.robot.Configs;
 
 public class Climber extends SubsystemBase {
-  // SparkFlexes
-  private SparkFlex leftClimber;
-  private SparkFlex rightClimber;
+    private SparkFlex leftClimber;
+    private SparkFlex rightClimber;
 
-  // Sensors
-  private DigitalInput leftHallSensor;
-  private DigitalInput rightHallSensor;
+    private DigitalInput leftHallSensor;
+    private DigitalInput rightHallSensor;
 
-  // Configs for the SparkFlexes - loaded from Configs
-  private SparkFlexConfig leftClimberConfig;
-  private SparkFlexConfig rightClimberConfig;
-  
-  // PID Stuff
-  private PIDController positionPid;
-  private double targetPosition = 0.0;
-  private boolean positionControlEnabled = false;
+    private SparkFlexConfig leftClimberConfig;
+    private SparkFlexConfig rightClimberConfig;
 
-  // Sensor Status variables
-  private boolean leftHallSensorTriggered = false;
-  private boolean rightHallSensorTriggered = false;
+    private PIDController positionPid;
+    private double targetPosition = 0.0;
+    private boolean positionControlEnabled = false;
 
-  /** Creates a new Climber. */
-  public Climber() {
-    leftHallSensor = new DigitalInput(0);
-    rightHallSensor = new DigitalInput(1);
+    // Sensor Status
+    private boolean leftHallSensorTriggered = false;
+    private boolean rightHallSensorTriggered = false;
 
+    public Climber() {
+        leftHallSensor = new DigitalInput(0);
+        rightHallSensor = new DigitalInput(1);
 
-    leftClimber = new SparkFlex(
-      Constants.ClimberConstants.kClimberLeftCanId, 
-      com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
-    );
+        leftClimber = new SparkFlex(
+                Constants.ClimberConstants.kClimberLeftCanId,
+                com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
+        );
+        rightClimber = new SparkFlex(
+                Constants.ClimberConstants.kClimberRightCanId,
+                com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
+        );
 
-    rightClimber = new SparkFlex(
-      Constants.ClimberConstants.kClimberRightCanId, 
-      com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
-    );
+        leftClimberConfig = Configs.ClimberConfigs.leftClimberConfig;
+        rightClimberConfig = Configs.ClimberConfigs.rightClimberConfig;
 
+        leftClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        rightClimber.configure(rightClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    // Load configs
-    leftClimberConfig = Configs.ClimberConfigs.leftClimberConfig;
+        positionPid = new PIDController(
+                Constants.ClimberConstants.kClimberP,
+                0, // I = 0 for climber
+                Constants.ClimberConstants.kClimberD
+        );
+        positionPid.setTolerance(Constants.ClimberConstants.kClimberPositionTolerance);
+    }
 
-    rightClimberConfig = Configs.ClimberConfigs.rightClimberConfig;
+    @Override
+    public void periodic() {
+        isLeftHallSensorTriggered();
+        isRightHallSensorTriggered();
 
+        if (!positionControlEnabled) return;
 
-    //Config motors - Deprecated in 2027
-    leftClimber.configure(
-      leftClimberConfig, 
-      ResetMode.kNoResetSafeParameters, 
-      PersistMode.kPersistParameters
-    );
-
-    rightClimber.configure(
-      rightClimberConfig, 
-      ResetMode.kNoResetSafeParameters, 
-      PersistMode.kPersistParameters
-    );
-
-
-    // Position PID controller (units = encoder position units)
-    positionPid = new PIDController(
-      Constants.ClimberConstants.kClimberP,
-      Constants.ClimberConstants.kClimberI,
-      Constants.ClimberConstants.kClimberD
-    );
-
-    // Sets how tolerant the PID is to slight errors
-    positionPid.setTolerance(Constants.ClimberConstants.kClimberPositionTolerance);
-
-  }
-
-
-  @Override
-  public void periodic() {
-      isLeftHallSensorTriggered();
-      isRightHallSensorTriggered();
-
-      if (rightHallSensorTriggered) {
-        stopRight();
-      }
-
-      if (leftHallSensorTriggered) {
-        stopLeft();
-      }
-
-      // This method will be called once per scheduler run
-      if (positionControlEnabled) {
-
-        double leftPos;
-        double rightPos;
-
+        double leftPos, rightPos;
         try {
-          leftPos = leftClimber.getEncoder().getPosition();
-          rightPos = rightClimber.getEncoder().getPosition();
-        } 
-
-        catch (Exception ex) {
-          positionControlEnabled = false;
-          return;
+            leftPos = leftClimber.getEncoder().getPosition();
+            rightPos = rightClimber.getEncoder().getPosition();
+        } catch (Exception ex) {
+            positionControlEnabled = false;
+            return;
         }
 
         double currentPos = (leftPos + rightPos) / 2.0;
         double output = positionPid.calculate(currentPos, targetPosition);
 
-
-        // Limit maximum voltage
+        // Limit max voltage (reduce overshoot)
         double maxV = Constants.ClimberConstants.kClimberMaxVoltage;
-        if (output > maxV) {
-          output = maxV;
-        } else if (output < -maxV) {
-          output = -maxV;
-        }
+        output = Math.max(-maxV, Math.min(maxV, output));
 
-        setVoltage(output);
-      }
-  }
+        // Current readings
+        double leftCurrent = leftClimber.getOutputCurrent();
+        double rightCurrent = rightClimber.getOutputCurrent();
+        double bottomThreshold = Constants.ClimberConstants.kClimberBottomDetectCurrent;
 
+        // Independent side clamping
+        double leftOutput = output;
+        double rightOutput = output;
 
-  public void setVoltage(double voltage) {
-    leftClimber.setVoltage(voltage);
-    rightClimber.setVoltage(voltage);
-  }
+        // Clamp downward motion if hitting bottom
+        if (leftOutput < 0 && (leftHallSensorTriggered || leftCurrent > bottomThreshold)) leftOutput = 0;
+        if (rightOutput < 0 && (rightHallSensorTriggered || rightCurrent > bottomThreshold)) rightOutput = 0;
 
+        // Clamp upward motion if hitting top Hall sensor
+        if (leftOutput > 0 && leftHallSensorTriggered) leftOutput = 0;
+        if (rightOutput > 0 && rightHallSensorTriggered) rightOutput = 0;
 
-  public void setTargetPositionRotations(double position) {
-    targetPosition = position;
-    positionPid.reset();
-    positionControlEnabled = true;
-  }
+        // Reset integrator if fully clamped
+        if (leftOutput == 0 && rightOutput == 0) positionPid.reset();
 
-  
-  public void disablePositionControl() {
-    positionControlEnabled = false;
-  }
-
-  
-  public void enablePositionControl() {
-    positionPid.reset();
-    positionControlEnabled = true;
-  }
-
-
-  /** Returns true when position PID reports we're at the setpoint. */
-  public boolean atSetpoint() {
-    return positionPid.atSetpoint();
-  }
-
-  
-  public void zeroEncoders() {
-    try {
-      leftClimber.getEncoder().setPosition(0.0);
-    } catch (Exception ignore) {
-      // If the hardware API doesn't support setPosition, ignore (will be caught at compile/run if needed)
+        // Apply voltage
+        leftClimber.setVoltage(leftOutput);
+        rightClimber.setVoltage(rightOutput);
     }
-    try {
-      rightClimber.getEncoder().setPosition(0.0);
-    } catch (Exception ignore) {
+
+    // Manual voltage control
+    public void setVoltage(double voltage) {
+        leftClimber.setVoltage(voltage);
+        rightClimber.setVoltage(voltage);
     }
-  }
 
+    // PID control
+    public void setTargetPositionRotations(double position) {
+        targetPosition = position;
+        positionPid.reset();
+        positionControlEnabled = true;
+    }
 
-  public void stop() {
-    setVoltage(0.0);
-    disablePositionControl();
-  }
+    public void disablePositionControl() { positionControlEnabled = false; }
 
-  
-  public void stopRight() {
-    rightClimber.setVoltage(0);
-  }
+    public void enablePositionControl() {
+        positionPid.reset();
+        positionControlEnabled = true;
+    }
 
-  public void stopLeft() {
-    leftClimber.setVoltage(0);
-  }
+    public boolean atSetpoint() { return positionPid.atSetpoint(); }
 
-  public boolean isLeftHallSensorTriggered() {
-    leftHallSensorTriggered = !leftHallSensor.get(); // Assuming active low
-    return leftHallSensorTriggered;
-  }
+    // Encoder (never re-zeroed in match)
+    public void zeroEncoders() {
+        try { leftClimber.getEncoder().setPosition(0.0); } catch (Exception ignored) {}
+        try { rightClimber.getEncoder().setPosition(0.0); } catch (Exception ignored) {}
+    }
 
+    // Emergency stop
+    public void eStop() {
+        setVoltage(0.0);
+        disablePositionControl();
+    }
 
-  public boolean isRightHallSensorTriggered() {
-    rightHallSensorTriggered = !rightHallSensor.get(); // Assuming active low
-    return rightHallSensorTriggered;
-  }
+    public void stop() {
+        leftClimber.setVoltage(0);
+        rightClimber.setVoltage(0);
+    }
 
+    public boolean isLeftHallSensorTriggered() {
+        leftHallSensorTriggered = !leftHallSensor.get(); // active low
+        return leftHallSensorTriggered;
+    }
 
+    public boolean isRightHallSensorTriggered() {
+        rightHallSensorTriggered = !rightHallSensor.get(); // active low
+        return rightHallSensorTriggered;
+    }
+
+    // Precoded motion commands (safe)
+    public void toTop() {
+        setTargetPositionRotations(100.0); // small relative value
+    }
+
+    public void toBottom() {
+        setTargetPositionRotations(-100.0); // small relative value
+    }
 }
