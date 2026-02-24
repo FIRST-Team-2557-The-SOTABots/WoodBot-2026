@@ -35,6 +35,9 @@ public class Climber extends SubsystemBase {
     private final Debouncer m_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kRising);
     private double m_startTime = 0;
 
+    boolean left = false;
+    boolean right = false;
+
     public Climber() {
         leftHallSensor = new DigitalInput(0);
         rightHallSensor = new DigitalInput(1);
@@ -58,8 +61,10 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        isLeftHallSensorTriggered();
-        isRightHallSensorTriggered();
+        if ((isLeftHallSensorTriggered() || isRightHallSensorTriggered())
+            && leftClimber.get() > 0) {
+        stop();
+    }
         double timeRunning = Timer.getFPGATimestamp() - m_startTime;
         if (timeRunning > 0.5 && getCurrent() > 20.0 && leftClimber.get() < 0) {
             stop();
