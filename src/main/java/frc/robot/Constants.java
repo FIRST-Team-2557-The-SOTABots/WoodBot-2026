@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -57,6 +58,7 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 2;
 
     public static final boolean kGyroReversed = false;
+    public static final double kMovementScale = 1;
     public static double kTurningP = 1.5;
     public static double kTurningI = 0;
     public static double kTurningD = 0;
@@ -109,6 +111,19 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class FieldConstants {
+    public static final class Red {
+      public static final Translation2d kHubPosition = new Translation2d(11.92, 4.04);
+      public static final Translation2d kShuttleDepot = new Translation2d(4.115, 4.01);
+      public static final Translation2d kShuttleOutpost = new Translation2d(8.23, 4.01);
+    }
+    public static final class Blue {
+      public static final Translation2d kHubPosition = new Translation2d(4.63, 4.04);
+      public static final Translation2d kShuttleDepot = new Translation2d(4.115, 4.01);
+      public static final Translation2d kShuttleOutpost = new Translation2d(8.23, 4.01);
+    }
+  }
+
   public static final class ShooterConstants {
     public static final int kShooterFlyWheelLeftCanId = 12;
     public static final int kShooterFlyWheelMiddleCanId = 13;
@@ -117,13 +132,34 @@ public final class Constants {
 
     public static final int kShooterHoodServoRightChannel = 0;
     public static final int kShooterHoodServoLeftChannel = 1;
+    public static final double kProjectileSpeedMetersPerSecond = 15.0;
+
+    public static final InterpolatingDoubleTreeMap kHoodAngleMap = new InterpolatingDoubleTreeMap();
+    static {
+      // Populate the hood angle map with distance (in meters) to hood angle (in degrees) pairs
+      kHoodAngleMap.put(1.0, 10.0);
+      kHoodAngleMap.put(2.0, 20.0);
+      kHoodAngleMap.put(3.0, 30.0);
+      kHoodAngleMap.put(4.0, 40.0);
+      kHoodAngleMap.put(5.0, 50.0);
+    }
+
+    public static final InterpolatingDoubleTreeMap kFlywheelRPMMap = new InterpolatingDoubleTreeMap();
+    static {
+      // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs
+      kFlywheelRPMMap.put(1.0, 3000.0);
+      kFlywheelRPMMap.put(2.0, 4000.0);
+      kFlywheelRPMMap.put(3.0, 5000.0);
+      kFlywheelRPMMap.put(4.0, 6000.0);
+      kFlywheelRPMMap.put(5.0, 7000.0);
+    }
   }
 
   public static final class IntakeConstants {
     public static final int kIntakeIntakeCanId = 10;
     public static final int kIntakeROTCanId = 9;
 
-    public static final double kIntakeROTkP = 0.0;
+    public static final double kIntakeROTkP = 0.8;
     public static final double kIntakeROTkI = 0.0;
     public static final double kIntakeROTkD = 0.0;
 
@@ -131,6 +167,13 @@ public final class Constants {
     public static final double kIntakeDeployedPosition = 1.0;
     public static final double kIntakeClimbingPosition = 0.5;
     public static final double kIntakeTrenchPosition = 0.25;
+
+    public static final class IntakePosition {
+      public static final double kGround = 0.150;
+      public static final double kStowed = 0.55;
+      public static final double kClimbing = 0.5;
+      public static final double kTrench = 0.25;
+    }
 
   }
 

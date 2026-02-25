@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
   private SparkFlexConfig intakeConfig;
   private SparkMaxConfig intakeRotConfig;
 
-  private double intakePosition;
+  private double intakePosition = Constants.IntakeConstants.IntakePosition.kStowed;
 
   public Intake() {
     intake = new SparkFlex(

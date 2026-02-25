@@ -17,18 +17,19 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterHood;
 
 public class Shooter extends SubsystemBase {
 
   private SparkFlex shooterFlyWheelLeft;
   private SparkFlex shooterFlyWheelMiddle;
   private SparkFlex shooterFlyWheelRight;
-  private SparkFlex shooterDelivery;
+
 
   private SparkFlexConfig shooterFlyWheelLeftConfig;
   private SparkFlexConfig shooterFlyWheelMiddleConfig;
   private SparkFlexConfig shooterFlyWheelRightConfig;
-  private SparkFlexConfig shooterDeliveryConfig;
 
   private PIDController shooterFlyWheelPIDController;
 
@@ -54,15 +55,11 @@ public class Shooter extends SubsystemBase {
       Constants.ShooterConstants.kShooterFlyWheelRightCanId,
      MotorType.kBrushless);
 
-    shooterDelivery = new SparkFlex(
-      Constants.ShooterConstants.kShooterDeliveryCanId, 
-      MotorType.kBrushless);
-
 
     shooterFlyWheelLeftConfig = Configs.ShooterConfigs.ShooterFlyWheelLeftConfig;
     shooterFlyWheelMiddleConfig = Configs.ShooterConfigs.ShooterFlyWheelMiddleConfig;
     shooterFlyWheelRightConfig = Configs.ShooterConfigs.ShooterFlyWheelRightConfig;
-    shooterDeliveryConfig = Configs.ShooterConfigs.ShooterDeliveryConfig;
+
 
 
     shooterFlyWheelLeft.configure(
@@ -80,10 +77,7 @@ public class Shooter extends SubsystemBase {
       ResetMode.kNoResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    shooterDelivery.configure(
-      shooterDeliveryConfig,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kPersistParameters);
+
   }
 
   // Set the voltage of the flywheel motors to control the speed of the flywheels
@@ -93,10 +87,14 @@ public class Shooter extends SubsystemBase {
     shooterFlyWheelRight.setVoltage(voltage);
   }
 
+  // public void setFlyWheelRPM(double rpm) {
+  //   shooterFlyWheelLeft.getClosedLoopController().setReference(rpm, );
+  //   shooterFlyWheelMiddle.getClosedLoopController().setReference(rpm, com.revrobotics.ControlType.kVelocity);
+  //   shooterFlyWheelRight.getClosedLoopController().setReference(rpm, com.revrobotics.ControlType.kVelocity);
+  // }
+
   // Set the voltage of the delivery motor to control the speed of the delivery mechanism
-  public void setDeliveryVoltage(double voltage) {
-    shooterDelivery.setVoltage(voltage);
-  }
+
 
   //average the velocity of the three flywheels to get a more accurate reading of the flywheel speed
   public double getFlyWheelVelocity() {
@@ -112,6 +110,14 @@ public class Shooter extends SubsystemBase {
     double distance = diff.getNorm();
 
   }
+  
+  // Translation2d hub = Constants.FieldConstants.kHubPosition;
+
+  // double hoodAngle = getDesiredHoodAngle(hub);
+  // double flywheelRPM = getDesiredFlywheelRPM(hub);
+
+  // {kShooterHood.setHoodAngle(hoodAngle);
+  // setFlywheelRPM(flywheelRPM);}
 
   @Override
   public void periodic() {

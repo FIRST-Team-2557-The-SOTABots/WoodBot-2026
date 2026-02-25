@@ -90,7 +90,7 @@ public final class Configs {
             ShooterDeliveryConfig
                 .idleMode(IdleMode.kBrake)
                 .inverted(false)
-                .smartCurrentLimit(40);
+                .smartCurrentLimit(50); 
             }
     }
 

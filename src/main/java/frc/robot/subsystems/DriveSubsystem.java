@@ -11,6 +11,7 @@ import edu.wpi.first.hal.HAL;
 
 import org.littletonrobotics.junction.Logger;
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -43,6 +44,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -120,7 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(3.0, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
             ),
             config, // The robot configuration
@@ -156,10 +159,12 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
 
-   LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
-    LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getHeading() + 180,
+    Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
+    Logger.recordOutput("DriveSubsystem/GyroHeading", getTargetWithMovement(new Translation2d(5, 5)));
+
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
+    LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getLimelightHeading(),
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
@@ -211,6 +216,41 @@ Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
             m_rearRight.getPosition()
         },
         pose);
+  }
+
+  public double getLimelightHeading(){
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      return getHeading() + 180;
+    } else {
+      return getHeading();
+    }
+  }
+
+  // public Translation2d getTargetWithMovement(Translation2d target){
+  //   Translation2d movementVector = target.minus(getPose().getTranslation()).times(
+  //     Constants.DriveConstants.kMovementScale);
+  //   return target.plus(movementVector);
+  // }
+  public double getDistanceToHub(Translation2d hubPosition) {
+    return getPose().getTranslation().getDistance(hubPosition);
+  }
+
+  public double getDesiredHoodAngle(Translation2d hubPosition) {
+    double distance = getDistanceToHub(hubPosition);
+    return Constants.ShooterConstants.kHoodAngleMap.get(distance);
+  }
+
+  public double getDesiredFlywheelRPM(Translation2d hubPosition) {
+    double distance = getDistanceToHub(hubPosition);
+    return Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
+  }
+
+  public Translation2d getTargetWithMovement(Translation2d target){
+    ChassisSpeeds speeds = getRobotRelativeSpeeds();
+    Translation2d robotVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+    double flightTime = target.getDistance(getPose().getTranslation()) / Constants.ShooterConstants.kProjectileSpeedMetersPerSecond;
+    return target.plus(robotVelocity.times(flightTime));
   }
 
   public void turnToFieldPoint(double x, double y, CommandXboxController controller) {
@@ -329,7 +369,7 @@ Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getYaw() + 0).getDegrees();
+    return Rotation2d.fromDegrees(m_gyro.getRotation2d().unaryMinus().getDegrees()).getDegrees();
   }
 
   /**
