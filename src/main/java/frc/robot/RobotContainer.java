@@ -126,20 +126,26 @@ public class RobotContainer {
       () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
 
     m_driverController.leftTrigger().onTrue(new RunCommand(
-      () -> m_intake.setIntakeVoltage(-7), m_intake)).onFalse(new RunCommand(
+      () -> m_intake.setIntakeVoltage(-12), m_intake)).onFalse(new RunCommand(
         () -> m_intake.setIntakeVoltage(0), m_intake));
     
     m_driverController.leftBumper().onTrue(new RunCommand(
-      () -> m_shooter.setFlyWheelVoltage(-12), m_shooter)).onFalse(new RunCommand(
-        () -> m_shooter.setFlyWheelVoltage(0), m_shooter));
+      () -> m_shooter.setFlyWheelRPM(2130), m_shooter)).onFalse(new RunCommand(
+        () -> m_shooter.setFlyWheelRPM(0), m_shooter));
 
     m_driverController.rightBumper().onTrue(new RunCommand(
       () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter)).onFalse(new RunCommand(
         () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooter));
     
     m_driverController.rightTrigger().onTrue(new RunCommand(
-      () -> m_delivery.setDeliveryVoltage(-7), m_delivery)).onFalse(new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(-10), m_delivery)).onFalse(new RunCommand(
         () -> m_delivery.setDeliveryVoltage(0), m_delivery));
+
+    m_driverController.x().whileTrue(new RunCommand(
+      () -> m_robotDrive.turnToFieldPoint(
+        FieldPoints.getHubPosition().getX(),
+         FieldPoints.getHubPosition().getY(), 
+         m_driverController), m_robotDrive));
 
     
       

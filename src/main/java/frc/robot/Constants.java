@@ -26,7 +26,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 5.1;
+    public static final double kMaxSpeedMetersPerSecond = 5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration
@@ -63,7 +63,7 @@ public final class Constants {
     public static double kTurningI = 0;
     public static double kTurningD = 0;
 
-    public static double kDrivingP = 0.0023;
+    public static double kDrivingP = 0.0025;
     public static double kDrivingI = 0;
     public static double kDrivingD = 0;
     public static double kDrivingkV = 0;
@@ -132,7 +132,14 @@ public final class Constants {
 
     public static final int kShooterHoodServoRightChannel = 0;
     public static final int kShooterHoodServoLeftChannel = 1;
+    public static final double kShooterMaxAngleHoodmm = 82.5;
+    public static final double kShooterMinAngleHoodmm = 31.5;
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
+
+    public static final double kFlyWheelP = 0.008; 
+    public static final double kFlyWheelI = 0;
+    public static final double kFlyWheelD = 0.0;
+    public static final double kFlyWheelToleranceRPM = 50.0; 
 
     public static final InterpolatingDoubleTreeMap kHoodAngleMap = new InterpolatingDoubleTreeMap();
     static {
