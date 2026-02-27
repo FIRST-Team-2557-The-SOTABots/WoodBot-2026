@@ -160,6 +160,17 @@ public final class Constants {
       kFlywheelRPMMap.put(4.0, 6000.0);
       kFlywheelRPMMap.put(5.0, 7000.0);
     }
+
+    public static final InterpolatingDoubleTreeMap kFlywheelMap = new InterpolatingDoubleTreeMap();
+    static {
+      // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs  
+      kFlywheelRPMMap.put(0.0, 0.0);
+      kFlywheelRPMMap.put(2125.0, 4.0);
+      kFlywheelRPMMap.put(980.0, 2.0);
+      kFlywheelRPMMap.put(3220.0, 6.0);
+      kFlywheelRPMMap.put(4270.0, 8.0);
+      kFlywheelRPMMap.put(5000.0, 9.0);
+    }
   }
 
   public static final class IntakeConstants {

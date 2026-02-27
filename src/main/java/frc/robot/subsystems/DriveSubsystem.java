@@ -146,6 +146,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("distance", getDistanceTo(FieldPoints.getHubPosition()));
     SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
     SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveWheelSpeedMPS());
     SmartDashboard.putNumber("acutle RPM", m_frontLeft.getDriveVelocityRPM());
@@ -232,17 +233,17 @@ public class DriveSubsystem extends SubsystemBase {
   //     Constants.DriveConstants.kMovementScale);
   //   return target.plus(movementVector);
   // }
-  public double getDistanceToHub(Translation2d hubPosition) {
+  public double getDistanceTo(Translation2d hubPosition) {
     return getPose().getTranslation().getDistance(hubPosition);
   }
 
   public double getDesiredHoodAngle(Translation2d hubPosition) {
-    double distance = getDistanceToHub(hubPosition);
+    double distance = getDistanceTo(hubPosition);
     return Constants.ShooterConstants.kHoodAngleMap.get(distance);
   }
 
   public double getDesiredFlywheelRPM(Translation2d hubPosition) {
-    double distance = getDistanceToHub(hubPosition);
+    double distance = getDistanceTo(hubPosition);
     return Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
   }
 

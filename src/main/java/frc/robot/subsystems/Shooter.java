@@ -105,7 +105,10 @@ public class Shooter extends SubsystemBase {
   // Set the voltage of the flywheel motors to control the speed of the flywheels
   public void setFlyWheelRPM(double targetRPM) {
     this.targetRPM = targetRPM;
+  }
 
+  public double getHoldVoltage(){
+      return Constants.ShooterConstants.kFlywheelMap.get(this.targetRPM);
   }
 
  
@@ -148,9 +151,9 @@ public class Shooter extends SubsystemBase {
       voltage = Math.max(-12.0, Math.min(
         12.0, shooterFlyWheelPIDController.calculate(
           getFlyWheelVelocity(), targetRPM)));
-      shooterFlyWheelLeft.setVoltage(voltage+4);
-      shooterFlyWheelMiddle.setVoltage(voltage+4);
-      shooterFlyWheelRight.setVoltage(voltage+4);
+      shooterFlyWheelLeft.setVoltage(voltage + getHoldVoltage());
+      shooterFlyWheelMiddle.setVoltage(voltage + getHoldVoltage());
+      shooterFlyWheelRight.setVoltage(voltage + getHoldVoltage());
     }
     // This method will be called once per scheduler run
   }
