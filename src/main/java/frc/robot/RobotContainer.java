@@ -130,10 +130,12 @@ public class RobotContainer {
         () -> m_intake.setIntakeVoltage(0), m_intake));
     
     m_driverController.leftBumper().onTrue(new RunCommand(
-      () -> m_shooter.setFlyWheelRPM(2130), m_shooter).alongWith(new RunCommand(
-        () ->m_shooterHood.setHoodAngle(50))
+      () -> m_shooter.setFlyWheelRPM(3000), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(80))
       )).onFalse(new RunCommand(
-        () -> m_shooter.setFlyWheelRPM(0), m_shooter));
+        () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(31.25))
+      ));
 
     m_driverController.rightBumper().onTrue(new RunCommand(
       () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter)).onFalse(new RunCommand(

@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,11 +45,15 @@ public class Shooter extends SubsystemBase {
 
   private DriveSubsystem kDrive;
   private ShooterHood kShooterHood;
+  private Constants kConstants;
   private double targetRPM;
+  private double holdVoltage;
   private double voltage;
+  private InterpolatingDoubleTreeMap kFlywheelMap;
 
   /** Creates a new Shooter. */
   public Shooter(DriveSubsystem kDrive, ShooterHood kShooterHood) {
+    kConstants = new Constants();
     this.kDrive = kDrive;
     this.kShooterHood = kShooterHood;
 
@@ -100,6 +105,7 @@ public class Shooter extends SubsystemBase {
 
 
     shooterFlyWheelPIDController.setTolerance(Constants.ShooterConstants.kFlyWheelToleranceRPM);
+    
   }
 
   // Set the voltage of the flywheel motors to control the speed of the flywheels
@@ -108,7 +114,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getHoldVoltage(){
-      return Constants.ShooterConstants.kFlywheelMap.get(this.targetRPM);
+      return Constants.ShooterConstants.kFlywheelMap.get(3.0);
   }
 
  
@@ -151,9 +157,10 @@ public class Shooter extends SubsystemBase {
       voltage = Math.max(-12.0, Math.min(
         12.0, shooterFlyWheelPIDController.calculate(
           getFlyWheelVelocity(), targetRPM)));
-      shooterFlyWheelLeft.setVoltage(voltage + getHoldVoltage());
-      shooterFlyWheelMiddle.setVoltage(voltage + getHoldVoltage());
-      shooterFlyWheelRight.setVoltage(voltage + getHoldVoltage());
+      holdVoltage = Constants.ShooterConstants.kFlywheelMap.get(targetRPM);
+      shooterFlyWheelLeft.setVoltage(voltage + holdVoltage);
+      shooterFlyWheelMiddle.setVoltage(voltage + holdVoltage);
+      shooterFlyWheelRight.setVoltage(voltage + holdVoltage);
     }
     // This method will be called once per scheduler run
   }
