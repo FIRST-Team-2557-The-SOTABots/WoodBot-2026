@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.FieldUtil;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -22,6 +23,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final Translation2d GOAL = FieldUtil.getGoalForAlliance();
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -145,5 +147,10 @@ public final class Constants {
       public static final double kClimberBottomDetectCurrent = 60.0;
       public static final int kBottomDetectLoops = 6; // ~120ms
       
+  }
+
+  public static final class LaunchConstants {
+    public static final Translation2d GOAL =
+      new Translation2d(16.54, 5.32); // replace later
   }
 }
