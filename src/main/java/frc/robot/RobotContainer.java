@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,6 +46,7 @@ public class RobotContainer {
   
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Climber m_climber = new Climber();
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -103,6 +105,37 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(
       () -> m_robotDrive.zeroHeading()
       , m_robotDrive));
+
+    
+    // Climbs while buttons are being held and stops once it ends
+    m_driverController.rightBumper().and(m_driverController.leftBumper())
+    .whileTrue(Commands.startEnd(
+        m_climber::climb, 
+        () -> { 
+            m_climber.stop(); 
+            m_climber.stopClimb(); 
+        }, 
+        m_climber));
+    
+    // Brings climber to 30 inches using hall effect sensors (Declimb or Climb preperation)
+    m_driverController.rightTrigger().and(m_driverController.leftTrigger())
+      .whileTrue(
+        Commands
+        .startEnd(
+          m_climber::toTop, 
+          m_climber::stop, 
+          m_climber)
+      .until(
+        () -> m_climber.isLeftHallSensorTriggered() || m_climber.isRightHallSensorTriggered()));
+
+    // Back Button: Auto-retract until the motor stalls at the bottom
+    m_driverController.back().onTrue(
+      Commands.startEnd(
+        m_climber::toBottom, // Starts moving down at -0.5
+        m_climber::stop,     // Stops when done
+        m_climber            // Requirement
+      ).until(m_climber::isStalled) // Stops as soon as the 20A spike is detected
+    );
 
       
   }

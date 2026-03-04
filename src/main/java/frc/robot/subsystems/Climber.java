@@ -38,6 +38,8 @@ public class Climber extends SubsystemBase {
     boolean left = false;
     boolean right = false;
 
+    private boolean climbingMode = false;
+
     public Climber() {
         leftHallSensor = new DigitalInput(0);
         rightHallSensor = new DigitalInput(1);
@@ -60,16 +62,21 @@ public class Climber extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        if ((isLeftHallSensorTriggered() || isRightHallSensorTriggered())
+public void periodic() {
+    // Top limit protection (always active)
+    if ((isLeftHallSensorTriggered() || isRightHallSensorTriggered())
             && leftClimber.get() > 0) {
         stop();
     }
+
+    // Bottom detection (disabled during climb)
+    if (!climbingMode) {
         double timeRunning = Timer.getFPGATimestamp() - m_startTime;
         if (timeRunning > 0.5 && getCurrent() > 20.0 && leftClimber.get() < 0) {
             stop();
         }
     }
+}
 
     public double getCurrent() {
         double leftCurrent = leftClimber.getOutputCurrent();
@@ -126,5 +133,15 @@ public class Climber extends SubsystemBase {
     public void toBottom() {
         leftClimber.set(-0.5);
         rightClimber.set(-0.5);
+    }
+    
+    public void climb() {
+        climbingMode = true;
+        leftClimber.set(0.5);
+        rightClimber.set(0.5);
+    }
+
+    public void stopClimb(){
+        climbingMode = false;
     }
 }
