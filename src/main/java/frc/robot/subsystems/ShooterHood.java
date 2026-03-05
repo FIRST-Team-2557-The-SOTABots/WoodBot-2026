@@ -33,12 +33,12 @@ public ShooterHood() {
     hoodMap.put(4.0, 0.42);
 }
 
-  public void setAngle(double angleDegrees) {
+  public void setAngle(double anglePos) {
 
     // Clamp to safe range
 
-    shooterHoodServoRight.set(angleDegrees);
-    shooterHoodServoLeft.set(angleDegrees);
+    shooterHoodServoRight.set(anglePos);
+    shooterHoodServoLeft.set(anglePos);
   }
 
   public double getAngleFromDistance(double distance) {
