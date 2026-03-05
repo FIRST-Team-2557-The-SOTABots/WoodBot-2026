@@ -99,11 +99,6 @@ public class DriveSubsystem extends SubsystemBase {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
-    LimelightHelpers.SetRobotOrientation("Limlight-Rebuilt", 180, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-    // Get the pose estimate
-    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("Limlight-Rebuilt");
-
     m_turningController.enableContinuousInput(-Math.PI, Math.PI);
     m_turningController.setTolerance(Math.toRadians(1.0));
 
@@ -146,10 +141,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("gyro roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("gyro pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("gyro head", m_gyro.getAngle());
+
     SmartDashboard.putNumber("distance", getDistanceTo(FieldPoints.getHubPosition()));
     SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
     SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveWheelSpeedMPS());
     SmartDashboard.putNumber("acutle RPM", m_frontLeft.getDriveVelocityRPM());
+    SmartDashboard.putNumber("limelight", LimelightHelpers.getTA(""));
 
     // Update the pose estimator in the periodic block
     m_poseEstimator.update(
@@ -164,8 +164,8 @@ public class DriveSubsystem extends SubsystemBase {
     Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
     Logger.recordOutput("DriveSubsystem/GyroHeading", getTargetWithMovement(new Translation2d(5, 5)));
 
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
-    LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getLimelightHeading(),
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
+    LimelightHelpers.SetRobotOrientation("", getLimelightHeading(),
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
@@ -185,6 +185,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       Logger.recordOutput("greg", mt2.pose);
       // arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
+    } else {
+      
     }
     
 
@@ -361,6 +363,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    m_gyro.zeroYaw();
     m_gyro.reset();
   }
 
@@ -370,7 +373,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getRotation2d().unaryMinus().getDegrees()).getDegrees();
+    return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees()).getDegrees();
   }
 
   /**

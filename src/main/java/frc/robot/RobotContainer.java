@@ -37,8 +37,11 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+import java.util.jar.Attributes.Name;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -64,6 +67,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    registerNamedCommands();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -100,6 +104,47 @@ public class RobotContainer {
 
   }
 
+  private void registerNamedCommands(){
+    NamedCommands.registerCommand("IntakeOut", new RunCommand(
+      () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake));
+
+    NamedCommands.registerCommand("IntakeIn", new RunCommand(
+      () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
+
+    NamedCommands.registerCommand("IntakeIntake", new RunCommand(
+      () -> m_intake.setIntakeVoltage(12), m_intake));
+
+    NamedCommands.registerCommand("IntakeOuttake", new RunCommand(
+      () -> m_intake.setIntakeVoltage(-12), m_intake));
+
+    NamedCommands.registerCommand("ShooterTower", new RunCommand(
+      () -> m_shooter.setFlyWheelRPM(2850), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(50))
+      ));
+
+    NamedCommands.registerCommand("ShooterHub", new RunCommand(
+      () -> m_shooter.setFlyWheelRPM(2500), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(25))
+      ));
+
+    NamedCommands.registerCommand("ShooterDeliveryIn", new RunCommand(
+      () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter));
+
+    NamedCommands.registerCommand("ShooterDeliveryOut", new RunCommand(
+      () -> m_shooterDelivery.setDeliveryVoltage(-12), m_shooter));
+
+    NamedCommands.registerCommand("DeliveryIn", new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(10), m_delivery));
+    
+    NamedCommands.registerCommand("DeliveryOut", new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(-12), m_delivery));
+
+    NamedCommands.registerCommand("ShooterReset", new RunCommand(
+      () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(31.25))
+      ));
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -126,12 +171,41 @@ public class RobotContainer {
       () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
 
     m_driverController.leftTrigger().onTrue(new RunCommand(
-      () -> m_intake.setIntakeVoltage(-12), m_intake)).onFalse(new RunCommand(
+      () -> m_intake.setIntakeVoltage(12), m_intake)).onFalse(new RunCommand(
         () -> m_intake.setIntakeVoltage(0), m_intake));
+        
+    m_driverController.b().onTrue(new RunCommand(
+      () -> m_intake.setIntakeVoltage(-12), m_intake).alongWith(
+        new RunCommand(
+      () -> m_shooterDelivery.setDeliveryVoltage(-12), m_shooter)
+      ).alongWith(new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(-12), m_delivery)
+      // ).alongWith(
+      //   new RunCommand(
+      // () -> m_shooter.setFlyWheelVoltage(-6), m_shooter)
+      )).onFalse(new RunCommand(
+      () -> m_intake.setIntakeVoltage(0), m_intake).alongWith(
+        new RunCommand(
+      () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooter)
+      ).alongWith(new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(0), m_delivery))
+      // .alongWith(
+      //   new RunCommand(
+      // () -> m_shooter.setFlyWheelRPM(0), m_shooter)
+      // )
+      );
     
     m_driverController.leftBumper().onTrue(new RunCommand(
-      () -> m_shooter.setFlyWheelRPM(3000), m_shooter).alongWith(new RunCommand(
-        () ->m_shooterHood.setHoodAngle(80))
+      () -> m_shooter.setFlyWheelRPM(2850), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(50))
+      )).onFalse(new RunCommand(
+        () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(31.25))
+      ));
+
+        m_driverController.povUp().onTrue(new RunCommand(
+      () -> m_shooter.setFlyWheelRPM(2500), m_shooter).alongWith(new RunCommand(
+        () ->m_shooterHood.setHoodAngle(25))
       )).onFalse(new RunCommand(
         () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
         () ->m_shooterHood.setHoodAngle(31.25))

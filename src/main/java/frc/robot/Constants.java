@@ -136,7 +136,7 @@ public final class Constants {
     public static final double kShooterMinAngleHoodmm = 31.5;
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
 
-    public static final double kFlyWheelP = 0.08; 
+    public static final double kFlyWheelP = 0.005; 
     public static final double kFlyWheelI = 0;
     public static final double kFlyWheelD = 0.0;
     public static final double kFlyWheelToleranceRPM = 50.0; 
@@ -165,15 +165,15 @@ public final class Constants {
     static {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs  
       kFlywheelMap.put(0.0, 0.0);
-      kFlywheelMap.put(2125.0, 4.0);
-      kFlywheelMap.put(980.0, 2.0);
-      kFlywheelMap.put(3220.0, 6.0);
+      kFlywheelMap.put(1025.0, 2.0);
+      kFlywheelMap.put(2145.0, 4.0);
+      kFlywheelMap.put(3260.0, 6.0);
       kFlywheelMap.put(4270.0, 8.0);
       kFlywheelMap.put(5000.0, 9.0);
     }
   }
 
-  public static final class IntakeConstants {
+  public static final class  IntakeConstants {
     public static final int kIntakeIntakeCanId = 10;
     public static final int kIntakeROTCanId = 9;
 

@@ -117,6 +117,12 @@ public class Shooter extends SubsystemBase {
       return Constants.ShooterConstants.kFlywheelMap.get(3.0);
   }
 
+  public void setFlyWheelVoltage(double voltage) {
+    shooterFlyWheelLeft.setVoltage(voltage);
+    shooterFlyWheelMiddle.setVoltage(voltage);
+    shooterFlyWheelRight.setVoltage(voltage);
+  }
+
  
   public boolean isAtSetpoint() {
     return shooterFlyWheelPIDController.atSetpoint();

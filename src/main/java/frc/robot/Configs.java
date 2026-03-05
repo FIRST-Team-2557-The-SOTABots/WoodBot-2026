@@ -102,7 +102,7 @@ public final class Configs {
             intakeConfig
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(40)
-                    .inverted(false);
+                    .inverted(true);
 
             intakeROTConfig
                     .idleMode(IdleMode.kBrake)
