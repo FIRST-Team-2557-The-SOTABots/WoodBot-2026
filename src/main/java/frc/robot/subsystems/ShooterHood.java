@@ -41,10 +41,10 @@ public ShooterHood() {
     shooterHoodServoLeft.set(anglePos);
   }
 
-  public double getAngleFromDistance(double distance) {
-    double pos = hoodMap.get(distance);
-    return pos;
-  }
+  // public double getAngleFromDistance(double distance) {
+  //   double angle = hoodMap.get(distance);
+  //   return angle;
+  // }
 
   @Override
   public void periodic() {
