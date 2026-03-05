@@ -13,9 +13,7 @@ public class ShooterHood extends SubsystemBase {
 
   private Servo shooterHoodServoRight;
   private Servo shooterHoodServoLeft;
-
-  private static final double MIN_ANGLE = 22;  // temporary guess
-  private static final double MAX_ANGLE = 80;  // temporary guess
+  // temporary guess
 
   /** Creates a new ShooterHood. */
   private final InterpolatingDoubleTreeMap hoodMap =
@@ -30,27 +28,22 @@ public ShooterHood() {
         Constants.ShooterConstants.kShooterHoodServoLeftChannel);
 
     // TEST THIS NOWW
-    hoodMap.put(2.0, 28.0);
-    hoodMap.put(3.0, 35.0);
-    hoodMap.put(4.0, 42.0);
+    hoodMap.put(2.0, 0.26);
+    hoodMap.put(3.0, 0.34);
+    hoodMap.put(4.0, 0.42);
 }
 
   public void setAngle(double angleDegrees) {
 
     // Clamp to safe range
-    angleDegrees = Math.max(MIN_ANGLE, Math.min(MAX_ANGLE, angleDegrees));
 
-    // Convert angle -> 0 to 1 for servo
-    double servoValue =
-        (angleDegrees - MIN_ANGLE) / (MAX_ANGLE - MIN_ANGLE);
-
-    shooterHoodServoRight.set(servoValue);
-    shooterHoodServoLeft.set(servoValue);
+    shooterHoodServoRight.set(angleDegrees);
+    shooterHoodServoLeft.set(angleDegrees);
   }
 
   public double getAngleFromDistance(double distance) {
-    double angle = hoodMap.get(distance);
-    return Math.max(MIN_ANGLE, Math.min(MAX_ANGLE, angle));
+    double pos = hoodMap.get(distance);
+    return pos;
   }
 
   @Override
