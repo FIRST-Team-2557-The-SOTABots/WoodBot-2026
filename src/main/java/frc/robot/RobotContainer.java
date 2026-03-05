@@ -197,7 +197,7 @@ public class RobotContainer {
     
     m_driverController.leftBumper().onTrue(new RunCommand(
       () -> m_shooter.setFlyWheelRPM(2850), m_shooter).alongWith(new RunCommand(
-        () ->m_shooterHood.setHoodAngle(50))
+        () ->m_shooterHood.setHoodAngle(1000))
       )).onFalse(new RunCommand(
         () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
         () ->m_shooterHood.setHoodAngle(31.25))
