@@ -4,47 +4,31 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class ShooterHood extends SubsystemBase {
 
   private Servo shooterHoodServoRight;
   private Servo shooterHoodServoLeft;
-  // temporary guess
 
   /** Creates a new ShooterHood. */
-  private final InterpolatingDoubleTreeMap hoodMap =
-    new InterpolatingDoubleTreeMap();
-
-public ShooterHood() {
-
+  public ShooterHood() {
     shooterHoodServoRight = new Servo(
-        Constants.ShooterConstants.kShooterHoodServoRightChannel);
+      Constants.ShooterConstants.kShooterHoodServoRightChannel);
 
     shooterHoodServoLeft = new Servo(
-        Constants.ShooterConstants.kShooterHoodServoLeftChannel);
-
-    // TEST THIS NOWW
-    hoodMap.put(2.0, 0.26);
-    hoodMap.put(3.0, 0.34);
-    hoodMap.put(4.0, 0.42);
-}
-
-  public void setAngle(double anglePos) {
-
-    // Clamp to safe range
-
-    shooterHoodServoRight.set(anglePos);
-    shooterHoodServoLeft.set(anglePos);
+      Constants.ShooterConstants.kShooterHoodServoLeftChannel);
   }
 
-  // public double getAngleFromDistance(double distance) {
-  //   double angle = hoodMap.get(distance);
-  //   return angle;
-  // }
+  public void setHoodAngle(double length) {
+    shooterHoodServoRight.setAngle(length);
+    shooterHoodServoLeft.setAngle(length);
+  }
 
   @Override
   public void periodic() {

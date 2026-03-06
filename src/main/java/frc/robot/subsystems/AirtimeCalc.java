@@ -10,6 +10,7 @@ import frc.robot.subsystems.Shooter;
 public class AirtimeCalc extends SubsystemBase {
 
     private final DriveSubsystem m_drive;
+    private final Shooter m_shooter;
     private final double flywheelRadiusMeters = 0.2032; // 8-inch diameter = 0.1016 m radius
     private double currentAirtime = 0;
 
@@ -17,8 +18,9 @@ public class AirtimeCalc extends SubsystemBase {
      * Constructor
      * @param drive Pass in your robot's DriveSubsystem
      */
-    public AirtimeCalc(DriveSubsystem drive) {
+    public AirtimeCalc(DriveSubsystem drive, Shooter shooter) {
         m_drive = drive;
+        m_shooter = shooter;
     }
 
     /**
@@ -27,10 +29,10 @@ public class AirtimeCalc extends SubsystemBase {
     @Override
     public void periodic() {
 
-        if (Shooter.shooterFlyWheelLeft == null) return;
+        if (m_shooter.shooterFlyWheelLeft == null) return;
 
         // Get flywheel RPM
-        double rpm = Shooter.shooterFlyWheelLeft.getEncoder().getVelocity();
+        double rpm = m_shooter.shooterFlyWheelLeft.getEncoder().getVelocity();
 
         // Convert RPM -> linear velocity (m/s)
         double velocity = (rpm * 2 * Math.PI * flywheelRadiusMeters) / 60.0;
@@ -42,7 +44,7 @@ public class AirtimeCalc extends SubsystemBase {
         Pose2d pose = m_drive.getPose();
 
         // Calculate distance to goal
-        double distance = pose.getTranslation().getDistance(Constants.GOAL);
+        double distance = pose.getTranslation().getDistance(FieldPoints.getHubPosition());
 
         // Compute airtime safely
         if (velocity > 0) {

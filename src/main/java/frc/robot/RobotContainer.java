@@ -25,10 +25,12 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.AirtimeCalc;
 import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FieldPoints;
 import frc.robot.util.FieldUtil;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterHood;
+import frc.robot.subsystems.ShooterDelivery;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -53,10 +55,10 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Intake m_intake = new Intake();
   private final ShooterHood m_shooterHood = new ShooterHood();
-  // private final Shooter m_shooter = new Shooter(m_robotDrive, m_shooterHood);
+  private final Shooter m_shooter = new Shooter(m_robotDrive, m_shooterHood);
   private final Delivery m_delivery = new Delivery();
-  // private final ShooterDelivery m_shooterDelivery = new ShooterDelivery();
-  private final AirtimeCalc m_airtimeCalc = new AirtimeCalc(m_robotDrive);
+  private final ShooterDelivery m_shooterDelivery = new ShooterDelivery();
+  private final AirtimeCalc m_airtimeCalc = new AirtimeCalc(m_robotDrive, m_shooter);
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -120,27 +122,27 @@ public class RobotContainer {
     //   () -> m_robotDrive.turnToFieldPoint(FieldPoints.getHubPosition().getX(), FieldPoints.getHubPosition().getY(), m_driverController),
     //    m_robotDrive));
 
-    // m_driverController.a().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake));
+    m_driverController.a().onTrue(new RunCommand(
+      () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake));
 
-    // m_driverController.y().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
+    m_driverController.y().onTrue(new RunCommand(
+      () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
 
-    // m_driverController.leftTrigger().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(-7), m_intake)).onFalse(new RunCommand(
-    //     () -> m_intake.setIntakeVoltage(0), m_intake));
+    m_driverController.leftTrigger().onTrue(new RunCommand(
+      () -> m_intake.setIntakeVoltage(-7), m_intake)).onFalse(new RunCommand(
+        () -> m_intake.setIntakeVoltage(0), m_intake));
     
-    // m_driverController.leftBumper().onTrue(new RunCommand(
-    //   () -> m_shooter.setFlyWheelVoltage(-12), m_shooter)).onFalse(new RunCommand(
-    //     () -> m_shooter.setFlyWheelVoltage(0), m_shooter));
+    m_driverController.leftBumper().onTrue(new RunCommand(
+      () -> m_shooter.setFlyWheelVoltage(-12), m_shooter)).onFalse(new RunCommand(
+        () -> m_shooter.setFlyWheelVoltage(0), m_shooter));
 
-    // m_driverController.rightBumper().onTrue(new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter)).onFalse(new RunCommand(
-    //     () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooter));
+    m_driverController.rightBumper().onTrue(new RunCommand(
+      () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter)).onFalse(new RunCommand(
+        () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooter));
     
-    // m_driverController.rightTrigger().onTrue(new RunCommand(
-    //   () -> m_delivery.setDeliveryVoltage(-7), m_delivery)).onFalse(new RunCommand(
-    //     () -> m_delivery.setDeliveryVoltage(0), m_delivery));
+    m_driverController.rightTrigger().onTrue(new RunCommand(
+      () -> m_delivery.setDeliveryVoltage(-7), m_delivery)).onFalse(new RunCommand(
+        () -> m_delivery.setDeliveryVoltage(0), m_delivery));
 
     
       
