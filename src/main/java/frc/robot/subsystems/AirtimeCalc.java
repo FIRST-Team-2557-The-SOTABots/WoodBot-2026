@@ -10,7 +10,7 @@ import frc.robot.subsystems.Shooter;
 public class AirtimeCalc extends SubsystemBase {
 
     private final DriveSubsystem m_drive;
-    private final double flywheelRadiusMeters = 0.2032; // 8-inch diameter = 0.1016 m radius
+    private final double flywheelRadiusMeters = 0.1016; // 4-inch diameter = 0.1016 m radius
     private double currentAirtime = 0;
 
     /**
