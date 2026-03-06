@@ -1,16 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
-import java.io.ObjectInputFilter.Config;
-
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -19,17 +11,16 @@ import frc.robot.Constants;
 public class Delivery extends SubsystemBase {
 
   public static SparkFlex delivery;
-
   public static SparkFlexConfig deliveryConfig;
-  /** Creates a new Delivery. */
+
+  private int stutterCounter = 0;
+
   public Delivery() {
     delivery = new SparkFlex(
-      Constants.DeliveryConstants.kDeliveryCanId, 
+      Constants.DeliveryConstants.kDeliveryCanId,
       MotorType.kBrushless);
 
-      
     deliveryConfig = Configs.DeliveryConfigs.deliveryConfig;
-    
 
     delivery.configure(
       deliveryConfig,
@@ -41,8 +32,21 @@ public class Delivery extends SubsystemBase {
     delivery.setVoltage(voltage);
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void stutter(double voltage) {
+    stutterCounter++;
+
+    if (stutterCounter % 24 < 12) {
+      delivery.setVoltage(voltage);
+    } else {
+      delivery.setVoltage(0);
+    }
   }
+
+  public void resetStutterStop() {
+    stutterCounter = 0;
+    delivery.setVoltage(0);
+  }
+
+  @Override
+  public void periodic() {}
 }
