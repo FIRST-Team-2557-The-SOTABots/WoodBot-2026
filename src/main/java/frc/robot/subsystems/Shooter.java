@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
 
-  private SparkFlex shooterFlyWheelLeft;
+  public static SparkFlex shooterFlyWheelLeft;
   private SparkFlex shooterFlyWheelMiddle;
   private SparkFlex shooterFlyWheelRight;
   private SparkFlex shooterDelivery;
@@ -30,6 +30,7 @@ public class Shooter extends SubsystemBase {
   private SparkFlexConfig shooterDeliveryConfig;
 
   private PIDController shooterFlyWheelPIDController;
+
 
   /** Creates a new ShooterFlyWheels. */
   public Shooter() {
@@ -98,6 +99,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     // This method will be called once per scheduler run
   }
 }

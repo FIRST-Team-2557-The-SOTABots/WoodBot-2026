@@ -151,6 +151,6 @@ public final class Constants {
 
   public static final class LaunchConstants {
     public static final Translation2d GOAL =
-      new Translation2d(16.54, 5.32); // replace later
+      FieldUtil.getGoalForAlliance();
   }
 }
