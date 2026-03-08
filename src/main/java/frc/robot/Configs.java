@@ -110,7 +110,7 @@ public final class Configs {
                     .inverted(false);
 
             intakeROTConfig.absoluteEncoder
-                    .inverted(false);
+                    .inverted(true);
 
             intakeROTConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)

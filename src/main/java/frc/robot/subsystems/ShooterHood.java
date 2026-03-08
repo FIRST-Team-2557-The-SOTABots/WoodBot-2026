@@ -37,7 +37,7 @@ public class ShooterHood extends SubsystemBase {
     2564,
     1882,
     1201, 
-    1200    
+    1200   
     );
 
     shooterHoodServoRight.setAngle(0);
@@ -45,6 +45,11 @@ public class ShooterHood extends SubsystemBase {
   }
 
   public void setHoodAngle(double length) {
+    // if (length > ShooterConstants.kShooterMaxAngleHoodmm) {
+    //   length = ShooterConstants.kShooterMaxAngleHoodmm;
+    // } else if (length < ShooterConstants.kShooterMinAngleHoodmm) {
+    //   length = ShooterConstants.kShooterMinAngleHoodmm;
+    // }
     shooterHoodServoRight.setAngle(length);
     shooterHoodServoLeft.setAngle(length);
   }

@@ -51,6 +51,7 @@ import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+// Optional<Alliance> alliance = null;
 public class DriveSubsystem extends SubsystemBase {
   private RobotConfig config;
 
@@ -127,10 +128,10 @@ public class DriveSubsystem extends SubsystemBase {
               // This will flip the path being followed to the red side of the field.
               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
+              // var alliance = DriverStation.getAlliance();
+              // if (alliance.isPresent()) {
+              //   return alliance.get() == DriverStation.Alliance.Red;
+              // }
               return false;
             },
             this // Reference to this subsystem to set requirements
@@ -144,6 +145,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("gyro roll", m_gyro.getRoll());
     SmartDashboard.putNumber("gyro pitch", m_gyro.getPitch());
     SmartDashboard.putNumber("gyro head", m_gyro.getAngle());
+
+    // SmartDashboard.putData("alliance", alliance.get());
 
     SmartDashboard.putNumber("distance", getDistanceTo(FieldPoints.getHubPosition()));
     SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
@@ -256,12 +259,12 @@ public class DriveSubsystem extends SubsystemBase {
     return target.plus(robotVelocity.times(flightTime));
   }
 
-  public void turnToFieldPoint(double x, double y, CommandXboxController controller) {
+  public void turnToFieldPoint(Translation2d target, CommandXboxController controller) {
     Pose2d pose = getPose();
 
     // Vector from robot to target
     Translation2d diff =
-        new Translation2d(x, y).minus(pose.getTranslation());
+        target.minus(pose.getTranslation());
 
     // Prevent undefined angle when on top of target
     if (diff.getNorm() < 0.05) {
@@ -289,6 +292,10 @@ public class DriveSubsystem extends SubsystemBase {
     // Rotate in place, field-relative
     drive(-controller.getLeftY(), -controller.getLeftX(), omega, true);
 }
+
+  public boolean isAtTurnTarget(){
+    return m_turningController.atSetpoint();
+  }
 
 
   /**

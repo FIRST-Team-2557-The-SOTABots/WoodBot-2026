@@ -135,6 +135,7 @@ public final class Constants {
     public static final double kShooterMaxAngleHoodmm = 81.5;
     public static final double kShooterMinAngleHoodmm = 20.5;
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
+    public static final double kShooterDeliveryVoltage = 12.0;
 
     public static final double kFlyWheelP = 0.005; 
     public static final double kFlyWheelI = 0;
@@ -144,26 +145,29 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap kHoodAngleMap = new InterpolatingDoubleTreeMap();
     static {
       // Populate the hood angle map with distance (in meters) to hood angle (in degrees) pairs
-      kHoodAngleMap.put(1.0, 10.0);
-      kHoodAngleMap.put(2.0, 20.0);
-      kHoodAngleMap.put(3.0, 30.0);
-      kHoodAngleMap.put(4.0, 40.0);
-      kHoodAngleMap.put(5.0, 50.0);
+      kHoodAngleMap.put(1.5, 10.0);
+      kHoodAngleMap.put(2.0, 13.0);
+      kHoodAngleMap.put(2.5, 16.0);
+      kHoodAngleMap.put(3.0, 19.0);
+      kHoodAngleMap.put(3.5, 25.0);
+      kHoodAngleMap.put(4.0, 27.0);
     }
 
     public static final InterpolatingDoubleTreeMap kFlywheelRPMMap = new InterpolatingDoubleTreeMap();
     static {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs
-      kFlywheelRPMMap.put(1.0, 3000.0);
-      kFlywheelRPMMap.put(2.0, 4000.0);
-      kFlywheelRPMMap.put(3.0, 5000.0);
-      kFlywheelRPMMap.put(4.0, 6000.0);
-      kFlywheelRPMMap.put(5.0, 7000.0);
+      kFlywheelRPMMap.put(1.5,2750.0);
+      kFlywheelRPMMap.put(2.0, 3125.0);
+      kFlywheelRPMMap.put(2.5, 3275.0);
+      kFlywheelRPMMap.put(3.0, 3500.0);
+      kFlywheelRPMMap.put(3.5, 3550.0);
+      kFlywheelRPMMap.put(4.0, 3700.0);
     }
 
     public static final InterpolatingDoubleTreeMap kFlywheelMap = new InterpolatingDoubleTreeMap();
     static {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs  
+      kFlywheelMap.put(-3000.0, -6.0);
       kFlywheelMap.put(0.0, 0.0);
       kFlywheelMap.put(1025.0, 2.0);
       kFlywheelMap.put(2145.0, 4.0);
@@ -187,8 +191,8 @@ public final class Constants {
     public static final double kIntakeTrenchPosition = 0.25;
 
     public static final class IntakePosition {
-      public static final double kGround = 0.150;
-      public static final double kStowed = 0.55;
+      public static final double kGround = 0.16;
+      public static final double kStowed = 0.56;
       public static final double kClimbing = 0.5;
       public static final double kTrench = 0.25;
     }
@@ -197,6 +201,7 @@ public final class Constants {
 
   public static final class DeliveryConstants {
     public static final int kDeliveryCanId = 11;
+    public static final double kDeliveryVoltage = -10.0;
   }
 
   public static final class ClimberConstants {
