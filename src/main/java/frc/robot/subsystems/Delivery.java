@@ -19,6 +19,7 @@ import frc.robot.Constants;
 public class Delivery extends SubsystemBase {
 
   public static SparkFlex delivery;
+  public int stutterCounter;
 
   public static SparkFlexConfig deliveryConfig;
   /** Creates a new Delivery. */
@@ -39,6 +40,22 @@ public class Delivery extends SubsystemBase {
 
   public void setDeliveryVoltage(double voltage) {
     delivery.setVoltage(voltage);
+  }
+
+  public void stutter(double voltage){
+    stutterCounter++;
+
+    if (stutterCounter % 100 < 50){
+      delivery.setVoltage(voltage);
+    }
+    else{
+      delivery.setVoltage(-voltage);
+    }
+  }
+
+  public void resetStutterStop(){
+    stutterCounter = 0;
+    delivery.setVoltage(0);
   }
 
   @Override

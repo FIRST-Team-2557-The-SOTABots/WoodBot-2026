@@ -21,22 +21,20 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private SparkFlex intake;
+
   private SparkMax intakeROT;
 
   private SparkAbsoluteEncoder intakeEncoder;
 
   private SparkClosedLoopController intakePID;
 
-  private SparkFlexConfig intakeConfig;
+
   private SparkMaxConfig intakeRotConfig;
 
   private double intakePosition = Constants.IntakeConstants.IntakePosition.kStowed;
 
   public Intake() {
-    intake = new SparkFlex(
-      Constants.IntakeConstants.kIntakeIntakeCanId, 
-      com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+    
 
     intakeROT = new SparkMax(
       Constants.IntakeConstants.kIntakeROTCanId, 
@@ -48,14 +46,11 @@ public class Intake extends SubsystemBase {
     intakeEncoder = intakeROT.getAbsoluteEncoder();
 
 
-    intakeConfig = Configs.IntakeConfigs.intakeConfig;
+
     intakeRotConfig = Configs.IntakeConfigs.intakeROTConfig;
 
 
-    intake.configure(
-      intakeConfig,
-     ResetMode.kNoResetSafeParameters,
-     PersistMode.kPersistParameters);
+
 
     intakeROT.configure(
       intakeRotConfig,
@@ -63,9 +58,6 @@ public class Intake extends SubsystemBase {
       PersistMode.kPersistParameters);
   }
 
-  public void setIntakeVoltage(double voltage) {
-    intake.setVoltage(voltage);
-  }
 
   public double getIntakePosition() {
     return intakeEncoder.getPosition();
@@ -74,6 +66,10 @@ public class Intake extends SubsystemBase {
   public void setIntakePosition(double position) {
     this.intakePosition = position;
   }
+
+  public boolean isStowed() {
+  return intakePosition == Constants.IntakeConstants.IntakePosition.kStowed;
+}
 
   @Override
   public void periodic() {

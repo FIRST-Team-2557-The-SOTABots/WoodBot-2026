@@ -123,6 +123,14 @@ public class Shooter extends SubsystemBase {
     shooterFlyWheelRight.setVoltage(voltage);
   }
 
+  public void shootAtTarget(Translation2d point){
+    double distance = kDrive.getPose().getTranslation().getDistance(point);
+    double targetRPM = Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
+    double targetHoodAngle = Constants.ShooterConstants.kHoodAngleMap.get(distance);
+    kShooterHood.setHoodAngle(targetHoodAngle);
+    setFlyWheelRPM(targetRPM);
+  }
+
  
   public boolean isAtSetpoint() {
     return shooterFlyWheelPIDController.atSetpoint();
@@ -159,11 +167,14 @@ public class Shooter extends SubsystemBase {
       shooterFlyWheelLeft.setVoltage(0);
       shooterFlyWheelMiddle.setVoltage(0);
       shooterFlyWheelRight.setVoltage(0);
+      
     } else {
       voltage = Math.max(-12.0, Math.min(
         12.0, shooterFlyWheelPIDController.calculate(
           getFlyWheelVelocity(), targetRPM)));
+
       holdVoltage = Constants.ShooterConstants.kFlywheelMap.get(targetRPM);
+
       shooterFlyWheelLeft.setVoltage(voltage + holdVoltage);
       shooterFlyWheelMiddle.setVoltage(voltage + holdVoltage);
       shooterFlyWheelRight.setVoltage(voltage + holdVoltage);
