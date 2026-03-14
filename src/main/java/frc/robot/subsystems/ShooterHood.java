@@ -23,9 +23,33 @@ public class ShooterHood extends SubsystemBase {
 
     shooterHoodServoLeft = new Servo(
       Constants.ShooterConstants.kShooterHoodServoLeftChannel);
+
+    shooterHoodServoLeft.setBoundsMicroseconds(
+      2565,
+    2564,
+    1882,
+    1201, 
+    1200   
+    );
+
+    shooterHoodServoRight.setBoundsMicroseconds(
+      2565,
+    2564,
+    1882,
+    1201, 
+    1200   
+    );
+
+    shooterHoodServoRight.setAngle(0);
+    shooterHoodServoLeft.setAngle(0);
   }
 
   public void setHoodAngle(double length) {
+    // if (length > ShooterConstants.kShooterMaxAngleHoodmm) {
+    //   length = ShooterConstants.kShooterMaxAngleHoodmm;
+    // } else if (length < ShooterConstants.kShooterMinAngleHoodmm) {
+    //   length = ShooterConstants.kShooterMinAngleHoodmm;
+    // }
     shooterHoodServoRight.setAngle(length);
     shooterHoodServoLeft.setAngle(length);
   }

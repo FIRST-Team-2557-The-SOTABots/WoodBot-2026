@@ -51,6 +51,7 @@ import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+// Optional<Alliance> alliance = null;
 public class DriveSubsystem extends SubsystemBase {
   private RobotConfig config;
 
@@ -99,11 +100,6 @@ public class DriveSubsystem extends SubsystemBase {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
-    LimelightHelpers.SetRobotOrientation("Limlight-Rebuilt", 180, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-    // Get the pose estimate
-    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("Limlight-Rebuilt");
-
     m_turningController.enableContinuousInput(-Math.PI, Math.PI);
     m_turningController.setTolerance(Math.toRadians(1.0));
 
@@ -132,10 +128,10 @@ public class DriveSubsystem extends SubsystemBase {
               // This will flip the path being followed to the red side of the field.
               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
+              // var alliance = DriverStation.getAlliance();
+              // if (alliance.isPresent()) {
+              //   return alliance.get() == DriverStation.Alliance.Red;
+              // }
               return false;
             },
             this // Reference to this subsystem to set requirements
@@ -146,9 +142,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("gyro roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("gyro pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("gyro head", m_gyro.getAngle());
+
+    // SmartDashboard.putData("alliance", alliance.get());
+
+    SmartDashboard.putNumber("distance", getDistanceTo(FieldPoints.getHubPosition()));
     SmartDashboard.putNumber("frontLeft MPS",m_frontLeft.getRequestedMPS());
     SmartDashboard.putNumber("frountleft acutle MPS", m_frontLeft.getDriveWheelSpeedMPS());
     SmartDashboard.putNumber("acutle RPM", m_frontLeft.getDriveVelocityRPM());
+    SmartDashboard.putNumber("limelight", LimelightHelpers.getTA(""));
 
     // Update the pose estimator in the periodic block
     m_poseEstimator.update(
@@ -163,8 +167,8 @@ public class DriveSubsystem extends SubsystemBase {
     Logger.recordOutput("DriveSubsystem/EstimatedPose", getPose());
     Logger.recordOutput("DriveSubsystem/GyroHeading", getTargetWithMovement(new Translation2d(5, 5)));
 
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-rebuilt");
-    LimelightHelpers.SetRobotOrientation("limelight-rebuilt", getLimelightHeading(),
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
+    LimelightHelpers.SetRobotOrientation("", getLimelightHeading(),
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
@@ -184,6 +188,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       Logger.recordOutput("greg", mt2.pose);
       // arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
+    } else {
+      
     }
     
 
@@ -232,17 +238,17 @@ public class DriveSubsystem extends SubsystemBase {
   //     Constants.DriveConstants.kMovementScale);
   //   return target.plus(movementVector);
   // }
-  public double getDistanceToHub(Translation2d hubPosition) {
+  public double getDistanceTo(Translation2d hubPosition) {
     return getPose().getTranslation().getDistance(hubPosition);
   }
 
   public double getDesiredHoodAngle(Translation2d hubPosition) {
-    double distance = getDistanceToHub(hubPosition);
+    double distance = getDistanceTo(hubPosition);
     return Constants.ShooterConstants.kHoodAngleMap.get(distance);
   }
 
   public double getDesiredFlywheelRPM(Translation2d hubPosition) {
-    double distance = getDistanceToHub(hubPosition);
+    double distance = getDistanceTo(hubPosition);
     return Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
   }
 
@@ -253,12 +259,12 @@ public class DriveSubsystem extends SubsystemBase {
     return target.plus(robotVelocity.times(flightTime));
   }
 
-  public void turnToFieldPoint(double x, double y, CommandXboxController controller) {
+  public void turnToFieldPoint(Translation2d target, CommandXboxController controller) {
     Pose2d pose = getPose();
 
     // Vector from robot to target
     Translation2d diff =
-        new Translation2d(x, y).minus(pose.getTranslation());
+        target.minus(pose.getTranslation());
 
     // Prevent undefined angle when on top of target
     if (diff.getNorm() < 0.05) {
@@ -286,6 +292,10 @@ public class DriveSubsystem extends SubsystemBase {
     // Rotate in place, field-relative
     drive(-controller.getLeftY(), -controller.getLeftX(), omega, true);
 }
+
+  public boolean isAtTurnTarget(){
+    return m_turningController.atSetpoint();
+  }
 
 
   /**
@@ -360,6 +370,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    m_gyro.zeroYaw();
     m_gyro.reset();
   }
 
@@ -369,7 +380,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getRotation2d().unaryMinus().getDegrees()).getDegrees();
+    return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees()).getDegrees();
   }
 
   /**
