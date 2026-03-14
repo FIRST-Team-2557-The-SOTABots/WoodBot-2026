@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FieldPoints;
@@ -63,7 +62,6 @@ public class RobotContainer {
   private final Shooter m_shooter = new Shooter(m_robotDrive, m_shooterHood);
   private final Delivery m_delivery = new Delivery();
   private final ShooterDelivery m_shooterDelivery = new ShooterDelivery();
-  private final Climber m_climber = new Climber();
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -345,15 +343,7 @@ public class RobotContainer {
       // .onFalse(new RunCommand(() -> m_delivery.setDeliveryVoltage(0), m_delivery))
       // .onFalse(new RunCommand(() -> m_shooter.setFlyWheelVoltage(0)));
 
-    //put climber up
-    m_driverController.x().onTrue(new RunCommand(
-      () -> m_climber.setVoltage(4), m_climber)).onFalse(new RunCommand(
-        () -> m_climber.setVoltage(0), m_climber));
-
-    //put climber down
-    m_driverController.y().onTrue(new RunCommand(
-      () -> m_climber.setVoltage(-4), m_climber)).onFalse(new RunCommand(
-        () -> m_climber.setVoltage(0), m_climber));
+    
     
     //spinny mc spinface
     // m_driverController.rightTrigger().onTrue(new RunCommand(
