@@ -176,7 +176,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("requested shooter RPM", targetRPM);
     SmartDashboard.putNumber("shooter RPM", getFlyWheelVelocity());
-    SmartDashboard.putNumber("shooter votage", voltage);
+    SmartDashboard.putNumber("shooter voltage", voltage);
     if(targetRPM == 0){
 
       shooterFlyWheelLeft.setVoltage(0);
