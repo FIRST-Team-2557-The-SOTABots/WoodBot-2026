@@ -19,7 +19,6 @@ import frc.robot.subsystems.FieldPoints;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterDelivery;
-import frc.robot.subsystems.ShooterHood;
 import frc.robot.subsystems.intakeSpin;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -44,8 +43,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Intake m_intake = new Intake();
   private final intakeSpin m_intakeSpin = new intakeSpin();
-  private final ShooterHood m_shooterHood = new ShooterHood();
-  private final Shooter m_shooter = new Shooter(m_robotDrive, m_shooterHood);
+  private final Shooter m_shooter = new Shooter(m_robotDrive);
   private final Delivery m_delivery = new Delivery();
   private final ShooterDelivery m_shooterDelivery = new ShooterDelivery();
 
@@ -65,7 +63,6 @@ public class RobotContainer {
     // m_shooterDelivery.setDefaultCommand(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery));
     // m_climber.setDefaultCommand(new RunCommand(() -> m_climber.setVoltage(0), m_climber));
     // m_intake.setDefaultCommand(new RunCommand(() -> m_intake.setIntakeVoltage(0), m_intake));
-    m_shooterHood.setDefaultCommand(new RunCommand(() -> m_shooterHood.setHoodAngle(10), m_shooterHood));
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.

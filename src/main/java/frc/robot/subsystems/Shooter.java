@@ -43,7 +43,6 @@ public class Shooter extends SubsystemBase {
   private PIDController shooterFlyWheelPIDController;
 
   private DriveSubsystem kDrive;
-  private ShooterHood kShooterHood;
   private Constants kConstants;
   private double targetRPM;
   private double holdVoltage;
@@ -51,10 +50,9 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap kFlywheelMap;
 
   /** Creates a new Shooter. */
-  public Shooter(DriveSubsystem kDrive, ShooterHood kShooterHood) {
+  public Shooter(DriveSubsystem kDrive) {
     kConstants = new Constants();
     this.kDrive = kDrive;
-    this.kShooterHood = kShooterHood;
 
 
     shooterFlyWheelLeft = new SparkFlex(
@@ -136,7 +134,6 @@ public class Shooter extends SubsystemBase {
     double distance = kDrive.getPose().getTranslation().getDistance(point);
     double targetRPM = Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
     double targetHoodAngle = Constants.ShooterConstants.kHoodAngleMap.get(distance);
-    kShooterHood.setHoodAngle(targetHoodAngle);
     setFlyWheelRPM(targetRPM);
   }
 
