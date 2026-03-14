@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.subsystems.Shooter;
 
 public final class Configs {
     public static final class MAXSwerveModule {
@@ -69,6 +70,7 @@ public final class Configs {
         public static final SparkFlexConfig ShooterFlyWheelLeftConfig = new SparkFlexConfig();
         public static final SparkFlexConfig ShooterFlyWheelMiddleConfig = new SparkFlexConfig();
         public static final SparkFlexConfig ShooterFlyWheelRightConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig ShooterFlyWheelOtherConfig = new SparkFlexConfig();
         public static final SparkFlexConfig ShooterDeliveryConfig = new SparkFlexConfig();
 
         static {
@@ -85,6 +87,11 @@ public final class Configs {
             ShooterFlyWheelRightConfig
                 .idleMode(IdleMode.kCoast)
                 .inverted(true)
+                .smartCurrentLimit(40);
+
+            ShooterFlyWheelOtherConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(false)
                 .smartCurrentLimit(40);
 
             ShooterDeliveryConfig

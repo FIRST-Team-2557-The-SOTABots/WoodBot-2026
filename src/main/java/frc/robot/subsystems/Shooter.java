@@ -29,14 +29,17 @@ public class Shooter extends SubsystemBase {
   private SparkFlex shooterFlyWheelLeft;
   private SparkFlex shooterFlyWheelMiddle;
   private SparkFlex shooterFlyWheelRight;
+  private SparkFlex shooterFlyWheelOther;
 
   private RelativeEncoder shooterFlyWheelLeftRelativeEncoder;
   private RelativeEncoder shooterFlyWheelMiddleRelativeEncoder;
   private RelativeEncoder shooterFlyWheelRightRelativeEncoder;
+  private RelativeEncoder shooterFlyWheelOtherRelativeEncoder;
 
   private SparkFlexConfig shooterFlyWheelLeftConfig;
   private SparkFlexConfig shooterFlyWheelMiddleConfig;
   private SparkFlexConfig shooterFlyWheelRightConfig;
+  private SparkFlexConfig shooterFlyWheelOtherConfig;
 
   // Single shared WPILib PID controller for all three flywheels.
   // Since all motors target the same RPM, one controller is sufficient.
@@ -75,10 +78,15 @@ public class Shooter extends SubsystemBase {
         MotorType.kBrushless);
     shooterFlyWheelRightRelativeEncoder = shooterFlyWheelRight.getEncoder();
 
+    shooterFlyWheelOther = new SparkFlex(
+        Constants.ShooterConstants.kShooterFlyWheelOtherCanId,
+        MotorType.kBrushless);
+    shooterFlyWheelOtherRelativeEncoder = shooterFlyWheelOther.getEncoder();
 
     shooterFlyWheelLeftConfig = Configs.ShooterConfigs.ShooterFlyWheelLeftConfig;
     shooterFlyWheelMiddleConfig = Configs.ShooterConfigs.ShooterFlyWheelMiddleConfig;
     shooterFlyWheelRightConfig = Configs.ShooterConfigs.ShooterFlyWheelRightConfig;
+    shooterFlyWheelOtherConfig = Configs.ShooterConfigs.ShooterFlyWheelOtherConfig;
 
     shooterFlyWheelLeft.configure(
         shooterFlyWheelLeftConfig,
@@ -94,7 +102,11 @@ public class Shooter extends SubsystemBase {
         shooterFlyWheelRightConfig,
         ResetMode.kNoResetSafeParameters,
         PersistMode.kPersistParameters);
-
+    
+    shooterFlyWheelOther.configure(
+        shooterFlyWheelOtherConfig,
+        ResetMode.kNoResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     shooterFlyWheelPIDController = new PIDController(
         Constants.ShooterConstants.kFlyWheelP,
@@ -121,6 +133,7 @@ public class Shooter extends SubsystemBase {
     shooterFlyWheelLeft.setVoltage(voltage);
     shooterFlyWheelMiddle.setVoltage(voltage);
     shooterFlyWheelRight.setVoltage(voltage);
+    shooterFlyWheelOther.setVoltage(voltage);
   }
 
   public void shootAtTarget(Translation2d point){
@@ -145,9 +158,11 @@ public class Shooter extends SubsystemBase {
 
 
   public double getFlyWheelVelocity() {
-    return (shooterFlyWheelLeft.getEncoder().getVelocity() +
-            shooterFlyWheelMiddle.getEncoder().getVelocity() +
-            shooterFlyWheelRight.getEncoder().getVelocity()) / 3.0;
+    return (shooterFlyWheelLeftRelativeEncoder.getVelocity() +
+            shooterFlyWheelMiddleRelativeEncoder.getVelocity() +
+            shooterFlyWheelRightRelativeEncoder.getVelocity() +
+            shooterFlyWheelOtherRelativeEncoder.getVelocity()
+            ) / 4.0;
   }
 
   public void shootStationary(double x, double y) {
@@ -167,6 +182,7 @@ public class Shooter extends SubsystemBase {
       shooterFlyWheelLeft.setVoltage(0);
       shooterFlyWheelMiddle.setVoltage(0);
       shooterFlyWheelRight.setVoltage(0);
+      shooterFlyWheelOther.setVoltage(0);
       
     } else {
       voltage = Math.max(-12.0, Math.min(
@@ -178,6 +194,7 @@ public class Shooter extends SubsystemBase {
       shooterFlyWheelLeft.setVoltage(voltage + holdVoltage);
       shooterFlyWheelMiddle.setVoltage(voltage + holdVoltage);
       shooterFlyWheelRight.setVoltage(voltage + holdVoltage);
+      shooterFlyWheelOther.setVoltage(voltage + holdVoltage);
     }
     // This method will be called once per scheduler run
   }

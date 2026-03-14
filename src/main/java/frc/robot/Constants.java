@@ -128,6 +128,7 @@ public final class Constants {
     public static final int kShooterFlyWheelLeftCanId = 12;
     public static final int kShooterFlyWheelMiddleCanId = 13;
     public static final int kShooterFlyWheelRightCanId = 14;
+    public static final int kShooterFlyWheelOtherCanId = 18;
     public static final int kShooterDeliveryCanId = 15;
 
     public static final int kShooterHoodServoRightChannel = 0;
