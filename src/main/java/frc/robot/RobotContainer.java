@@ -58,11 +58,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // m_shooter.setDefaultCommand(new RunCommand(() -> m_shooter.setFlyWheelRPM(0), m_shooter));
-    // m_delivery.setDefaultCommand(new RunCommand(() -> m_delivery.setDeliveryVoltage(0), m_delivery));
-    // m_shooterDelivery.setDefaultCommand(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery));
-    // m_climber.setDefaultCommand(new RunCommand(() -> m_climber.setVoltage(0), m_climber));
-    // m_intake.setDefaultCommand(new RunCommand(() -> m_intake.setIntakeVoltage(0), m_intake));
+    
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -131,44 +127,7 @@ public class RobotContainer {
       
     
 
-    // NamedCommands.registerCommand("IntakeOut", new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake));
-
-    // NamedCommands.registerCommand("IntakeIn", new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
-
-    // NamedCommands.registerCommand("IntakeIntake", new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(12), m_intake));
-
-    // NamedCommands.registerCommand("IntakeOuttake", new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(-12), m_intake));
-
-    // NamedCommands.registerCommand("ShooterTower", new RunCommand(
-    //   () -> m_shooter.setFlyWheelRPM(2850), m_shooter).alongWith(new RunCommand(
-    //     () ->m_shooterHood.setHoodAngle(50))
-    //   ));
-
-    // NamedCommands.registerCommand("ShooterHub", new RunCommand(
-    //   () -> m_shooter.setFlyWheelRPM(2500), m_shooter).alongWith(new RunCommand(
-    //     () ->m_shooterHood.setHoodAngle(25))
-    //   ));
-
-    // NamedCommands.registerCommand("ShooterDeliveryIn", new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter));
-
-    // NamedCommands.registerCommand("ShooterDeliveryOut", new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(-12), m_shooter));
-
-    // NamedCommands.registerCommand("DeliveryIn", new RunCommand(
-    //   () -> m_delivery.stutter(10), m_delivery));
     
-    // NamedCommands.registerCommand("DeliveryOut", new RunCommand(
-    //   () -> m_delivery.stutter(-12), m_delivery));
-
-    // NamedCommands.registerCommand("ShooterReset", new RunCommand(
-    //   () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
-    //     () ->m_shooterHood.setHoodAngle(31.25))
-    //   ));
   }
 
   /**
@@ -182,72 +141,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // m_driverController.a().whileTrue(new RunCommand(
-    //   () -> m_robotDrive.turnToFieldPoint(FieldPoints.getHubPosition().getX(), FieldPoints.getHubPosition().getY(), m_driverController),
-    //    m_robotDrive));
-
-    // m_driverController.a().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake));
-
-    // m_driverController.y().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
-
-    // m_driverController.leftTrigger().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(12), m_intake)).onFalse(new RunCommand(
-    //     () -> m_intake.setIntakeVoltage(0), m_intake));
-        
-    // m_driverController.b().onTrue(new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(-12), m_intake)
-    //   .alongWith(new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(-12), m_shooterDelivery)
-    //   ).alongWith(new RunCommand(
-    //   () -> m_delivery.setDeliveryVoltage(-12), m_delivery)
-    //   ).alongWith(
-    //     new RunCommand(
-    //   () -> m_shooter.setFlyWheelVoltage(-12), m_shooter)
-
-    //   )).onFalse(new RunCommand(
-    //   () -> m_intake.setIntakeVoltage(0), m_intake).alongWith(
-    //     new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)
-    //   ).alongWith(new RunCommand(
-    //   () -> m_delivery.setDeliveryVoltage(0), m_delivery))
-    //   .alongWith(
-    //     new RunCommand(
-    //   () -> m_shooter.setFlyWheelRPM(0), m_shooter)
-    //   )
-    //   );
     
-    // m_driverController.leftBumper().onTrue(new RunCommand(
-    //   () -> m_shooter.setFlyWheelRPM(2850), m_shooter).alongWith(new RunCommand(
-    //     () ->m_shooterHood.setHoodAngle(50))
-    //   )).onFalse(new RunCommand(
-    //     () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
-    //     () ->m_shooterHood.setHoodAngle(31.25))
-    //   ));
-
-
-      //   m_driverController.povUp().onTrue(new RunCommand(
-      // () -> m_shooter.setFlyWheelRPM(2500), m_shooter).alongWith(new RunCommand(
-      //   () ->m_shooterHood.setHoodAngle(25))
-      // )).onFalse(new RunCommand(
-      //   () -> m_shooter.setFlyWheelRPM(0), m_shooter).alongWith(new RunCommand(
-      //   () ->m_shooterHood.setHoodAngle(31.25))
-      // ));
-
-    // m_driverController.rightBumper().onTrue(new RunCommand(
-    //   () -> m_shooterDelivery.setDeliveryVoltage(12), m_shooter)).onFalse(new RunCommand(
-    //     () -> m_shooterDelivery.setDeliveryVoltage(0), m_shooter));
-    
-    // m_driverController.rightTrigger().onTrue(new RunCommand(
-    //   () -> m_delivery.stutter(-10), m_delivery)).onFalse(new RunCommand(
-    //     () -> m_delivery.stutter(0), m_delivery));
-
-    // m_driverController.x().whileTrue(new RunCommand(
-    //   () -> m_robotDrive.turnToFieldPoint(
-    //     FieldPoints.getHubPosition().getX(),
-    //      FieldPoints.getHubPosition().getY(), 
-    //      m_driverController), m_robotDrive));
 
     //shoot at hub
     m_driverController.leftBumper().onTrue(new RunCommand(
@@ -271,17 +165,7 @@ public class RobotContainer {
           () -> m_delivery.stutter(0), m_delivery)
           .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)));
 
-    //shoot at depot shuttle
-    // m_driverController.rightBumper().whileTrue(new RunCommand(
-    //   () -> m_shooter.shootAtTarget(FieldPoints.getDepotShuttle()), m_shooter)
-    //   .alongWith(new RunCommand(
-    //     () -> m_robotDrive.turnToFieldPoint(FieldPoints.getDepotShuttle(), m_driverController), m_robotDrive))
-    //     .until(
-    //       () -> m_shooter.isAtSetpoint() && m_robotDrive.isAtTurnTarget())
-    //     .andThen(new RunCommand(
-    //       () -> m_delivery.stutter(Constants.DeliveryConstants.kDeliveryVoltage), m_delivery))
-    //       .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(Constants.ShooterConstants.kShooterDeliveryVoltage), m_shooterDelivery)));
-
+    
     // Reset heading
     m_driverController.start().onTrue(Commands.runOnce(
       () -> m_robotDrive.zeroHeading()
@@ -297,13 +181,7 @@ public class RobotContainer {
 
 
 
-//  m_driverController.a().whileTrue(
-//   new ConditionalCommand(
-//     new RunCommand(() -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kGround), m_intake),
-//     new RunCommand(() -> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake),
-//     m_intake::isStowed  // returns true if stowed → deploy, false if deployed → stow
-//   )
-// );
+
 
     //intake
     m_driverController.leftTrigger().onTrue(new RunCommand(
