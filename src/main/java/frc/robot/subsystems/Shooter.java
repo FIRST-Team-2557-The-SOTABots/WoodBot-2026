@@ -133,9 +133,9 @@ public class Shooter extends SubsystemBase {
   public void shootAtTarget(Translation2d point){
     double distance = kDrive.getPose().getTranslation().getDistance(point);
     double targetRPM = Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
-    double targetHoodAngle = Constants.ShooterConstants.kHoodAngleMap.get(distance);
     setFlyWheelRPM(targetRPM);
   }
+
 
  
   public boolean isAtSetpoint() {
