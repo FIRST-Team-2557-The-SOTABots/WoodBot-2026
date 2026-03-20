@@ -229,10 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
     return getPose().getTranslation().getDistance(hubPosition);
   }
 
-  public double getDesiredHoodAngle(Translation2d hubPosition) {
-    double distance = getDistanceTo(hubPosition);
-    return Constants.ShooterConstants.kHoodAngleMap.get(distance);
-  }
+  
 
   public double getDesiredFlywheelRPM(Translation2d hubPosition) {
     double distance = getDistanceTo(hubPosition);

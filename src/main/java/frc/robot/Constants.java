@@ -129,12 +129,10 @@ public final class Constants {
     public static final int kShooterFlyWheelMiddleCanId = 13;
     public static final int kShooterFlyWheelRightCanId = 14;
     public static final int kShooterFlyWheelOtherCanId = 18;
+
     public static final int kShooterDeliveryCanId = 15;
 
-    public static final int kShooterHoodServoRightChannel = 0;
-    public static final int kShooterHoodServoLeftChannel = 1;
-    public static final double kShooterMaxAngleHoodmm = 81.5;
-    public static final double kShooterMinAngleHoodmm = 20.5;
+    
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
     public static final double kShooterDeliveryVoltage = 12.0;
 
@@ -143,16 +141,8 @@ public final class Constants {
     public static final double kFlyWheelD = 0.0;
     public static final double kFlyWheelToleranceRPM = 50.0; 
 
-    public static final InterpolatingDoubleTreeMap kHoodAngleMap = new InterpolatingDoubleTreeMap();
-    static {
-      // Populate the hood angle map with distance (in meters) to hood angle (in degrees) pairs
-      kHoodAngleMap.put(1.5, 10.0);
-      kHoodAngleMap.put(2.0, 13.0);
-      kHoodAngleMap.put(2.5, 16.0);
-      kHoodAngleMap.put(3.0, 19.0);
-      kHoodAngleMap.put(3.5, 25.0);
-      kHoodAngleMap.put(4.0, 27.0);
-    }
+    
+    
 
     public static final InterpolatingDoubleTreeMap kFlywheelRPMMap = new InterpolatingDoubleTreeMap();
     static {
@@ -205,17 +195,5 @@ public final class Constants {
     public static final double kDeliveryVoltage = -10.0;
   }
 
-  public static final class ClimberConstants {
-    public static final int kClimberLeftCanId = 16;
-    public static final int kClimberRightCanId = 17;
-      // PID gains for climber position control (encoder units -> position)
-      // Tweak these on the real robot. Defaults are conservative placeholders.
-      public static final double kClimberP = 1.0;
-      public static final double kClimberI = 0.0;
-      public static final double kClimberD = 0.0;
-      // Position tolerance (same units as encoder position). Adjust as needed.
-      public static final double kClimberPositionTolerance = 0.01;
-      // Maximum voltage to apply when using position control
-      public static final double kClimberMaxVoltage = 12.0;
-  }
+  
 }
