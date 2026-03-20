@@ -132,8 +132,8 @@ public final class Constants {
 
     public static final int kShooterHoodServoRightChannel = 0;
     public static final int kShooterHoodServoLeftChannel = 1;
-    public static final double kShooterMaxAngleHoodmm = 82.5;
-    public static final double kShooterMinAngleHoodmm = 31.5;
+    public static final double kShooterMaxAngleHoodmm = 81.5;
+    public static final double kShooterMinAngleHoodmm = 20.5;
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
     public static final double kShooterDeliveryVoltage = 12.0;
 
