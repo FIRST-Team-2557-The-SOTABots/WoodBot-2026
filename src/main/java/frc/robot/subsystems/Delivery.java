@@ -39,17 +39,6 @@ public class Delivery extends SubsystemBase {
     delivery.setVoltage(voltage);
   }
 
-  public void stutter(double voltage){
-    stutterCounter++;
-
-    if (stutterCounter % 100 < 50){
-      delivery.setVoltage(voltage);
-    }
-    else{
-      delivery.setVoltage(-voltage);
-    }
-  }
-
   public void resetStutterStop(){
     stutterCounter = 0;
     delivery.setVoltage(0);

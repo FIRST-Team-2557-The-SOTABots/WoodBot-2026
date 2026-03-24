@@ -56,24 +56,24 @@ public class Shooter extends SubsystemBase {
 
 
     shooterFlyWheelLeft = new SparkFlex(
-        Constants.ShooterConstants.kShooterFlyWheelLeftCanId,
+        Constants.ShooterConstants.kShooterFlyWheel1CanId,
         MotorType.kBrushless);
     shooterFlyWheelLeftRelativeEncoder = shooterFlyWheelLeft.getEncoder();
 
 
     shooterFlyWheelMiddle = new SparkFlex(
-        Constants.ShooterConstants.kShooterFlyWheelMiddleCanId,
+        Constants.ShooterConstants.kShooterFlyWheel2CanId,
         MotorType.kBrushless);
     shooterFlyWheelMiddleRelativeEncoder = shooterFlyWheelMiddle.getEncoder();
 
 
     shooterFlyWheelRight = new SparkFlex(
-        Constants.ShooterConstants.kShooterFlyWheelRightCanId,
+        Constants.ShooterConstants.kShooterFlyWheel3CanId,
         MotorType.kBrushless);
     shooterFlyWheelRightRelativeEncoder = shooterFlyWheelRight.getEncoder();
 
     shooterFlyWheelOther = new SparkFlex(
-        Constants.ShooterConstants.kShooterFlyWheelOtherCanId,
+        Constants.ShooterConstants.kShooterFlyWheel4CanId,
         MotorType.kBrushless);
     shooterFlyWheelOtherRelativeEncoder = shooterFlyWheelOther.getEncoder();
 
@@ -107,8 +107,6 @@ public class Shooter extends SubsystemBase {
         Constants.ShooterConstants.kFlyWheelI,
         Constants.ShooterConstants.kFlyWheelD);
 
-    //SimpleMotorFeedforward feed = new SimpleMotorFeedforward(0,);
-
 
     shooterFlyWheelPIDController.setTolerance(Constants.ShooterConstants.kFlyWheelToleranceRPM);
     
@@ -130,8 +128,8 @@ public class Shooter extends SubsystemBase {
     shooterFlyWheelOther.setVoltage(voltage);
   }
 
-  public void shootAtTarget(Translation2d point){
-    double distance = kDrive.getPose().getTranslation().getDistance(point);
+  public void shootAtTarget(Translation2d point, DriveSubsystem m_drive){
+    double distance = m_drive.getPose().getTranslation().getDistance(point);
     double targetRPM = Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
     setFlyWheelRPM(targetRPM);
   }

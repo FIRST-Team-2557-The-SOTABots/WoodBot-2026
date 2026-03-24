@@ -73,7 +73,7 @@ public final class Configs {
         static {
             ShooterFlyWheelLeftConfig
                 .idleMode(IdleMode.kCoast)
-                .inverted(false)
+                .inverted(true)
                 .smartCurrentLimit(40);
 
             ShooterFlyWheelMiddleConfig
@@ -83,7 +83,7 @@ public final class Configs {
 
             ShooterFlyWheelRightConfig
                 .idleMode(IdleMode.kCoast)
-                .inverted(true)
+                .inverted(false)
                 .smartCurrentLimit(40);
 
             ShooterFlyWheelOtherConfig
@@ -93,7 +93,7 @@ public final class Configs {
 
             ShooterDeliveryConfig
                 .idleMode(IdleMode.kBrake)
-                .inverted(false)
+                .inverted(true)
                 .smartCurrentLimit(50); 
             }
     }
@@ -105,13 +105,13 @@ public final class Configs {
         static {
             intakeConfig
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(40)
+                    .smartCurrentLimit(60)
                     .inverted(true);
 
             intakeROTConfig
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(40)
-                    .inverted(false);
+                    .inverted(true);
 
             intakeROTConfig.absoluteEncoder
                     .inverted(true);
@@ -134,7 +134,7 @@ public final class Configs {
             deliveryConfig
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(40)
-                    .inverted(false);
+                    .inverted(true);
         }
     }
               

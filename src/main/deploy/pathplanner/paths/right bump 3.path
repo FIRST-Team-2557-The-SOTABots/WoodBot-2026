@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.410474495848163,
-        "y": 5.331482799525504
+        "x": 2.9251785714285723,
+        "y": 2.5881190476190477
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.657935943060503,
-        "y": 5.8802016607354695
+        "x": 2.1636234228720506,
+        "y": 1.7958322140762877
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 12.100272835112694,
-        "y": 7.36497034400949
+        "x": 0.23657142857142954,
+        "y": 0.3854047619047628
       },
       "prevControl": {
-        "x": 9.345919335705815,
-        "y": 7.816856465005933
+        "x": -0.013428571428570457,
+        "y": 0.3854047619047628
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "StoppyMcStopFace",
+      "waypointRelativePos": 0.15186104218362034,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StoppyMcStopFace"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 89.30130561701655
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -108.43494882292204
+    "rotation": 37.69424046668907
   },
   "useDefaultConstraints": true
 }

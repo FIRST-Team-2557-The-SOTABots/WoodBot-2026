@@ -93,15 +93,11 @@ public class RobotContainer {
   }
 
   private void registerNamedCommands(){
-    NamedCommands.registerCommand("ShootyMcShootFace", new InstantCommand(
-      () -> m_shooter.shootAtTarget(FieldPoints.getHubPosition()), m_shooter)
-      .alongWith(new RunCommand(
-        () -> m_robotDrive.turnToFieldPoint(FieldPoints.getHubPosition(), m_driverController), m_robotDrive))
-        .until(
-          () -> m_shooter.isAtSetpoint() && m_robotDrive.isAtTurnTarget())
-        .andThen(new RunCommand(
-          () -> m_delivery.stutter(Constants.DeliveryConstants.kDeliveryVoltage), m_delivery))
-          .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(Constants.ShooterConstants.kShooterDeliveryVoltage), m_shooterDelivery)));
+    
+    //shoot
+    NamedCommands.registerCommand("Shoot", new RunCommand(
+      () -> {m_shooter.shootAtTarget(FieldPoints.getHubPosition() , m_robotDrive);
+         m_robotDrive.turnToFieldPoint(FieldPoints.getHubPosition(), m_driverController);}, m_shooter, m_robotDrive));
 
     //intake out
     NamedCommands.registerCommand("IntakeOut", new RunCommand(
@@ -115,15 +111,19 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeIn", new RunCommand(
       ()-> m_intake.setIntakePosition(Constants.IntakeConstants.IntakePosition.kStowed), m_intake));
 
-      //shooter delivery
+      //delivery
       NamedCommands.registerCommand("Delivery", new RunCommand(
-        ()-> m_delivery.stutter(10), m_delivery));
+        ()-> m_delivery.setDeliveryVoltage(-10), m_delivery).alongWith(new RunCommand(
+          ()-> m_shooterDelivery.setDeliveryVoltage(Constants.ShooterConstants.kShooterDeliveryVoltage), m_shooterDelivery)));
 
       //stop shooter, shooter delivery, and delivery
       NamedCommands.registerCommand("StoppyMcStopFace", new RunCommand(
         ()-> m_shooter.setFlyWheelVoltage(0), m_shooter).alongWith(new RunCommand(
           ()-> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)).alongWith(new RunCommand(
-            ()-> m_delivery.stutter(0), m_delivery)));
+            ()-> m_delivery.setDeliveryVoltage(0), m_delivery)).alongWith(
+              new RunCommand(
+              () -> m_intakeSpin.setIntakeVoltage(0), m_intake)
+           ));
       
     
 
@@ -143,26 +143,122 @@ public class RobotContainer {
 
     
 
-    //shoot at hub
-    m_driverController.leftBumper().onTrue(new RunCommand(
-      () -> m_shooter.shootAtTarget(FieldPoints.getHubPosition()), m_shooter)
-      .alongWith(new RunCommand(
-        () -> m_robotDrive.turnToFieldPoint(FieldPoints.getHubPosition(), m_driverController), m_robotDrive)))
-        .onFalse(new RunCommand(
-      () -> m_shooter.setFlyWheelRPM(0), m_shooter)
-      .alongWith(new RunCommand(
+    m_driverController.leftBumper().onTrue(
+    new RunCommand(
+        () -> {
+            m_shooterDelivery.setDeliveryVoltage(-10);
+            m_shooter.setFlyWheelVoltage(-10);
+        },
+        m_shooterDelivery, m_shooter
+    )
+    .withTimeout(0.15)
+
+    // Stop both after reverse
+    .andThen(() -> {
+        m_shooterDelivery.setDeliveryVoltage(0);
+        m_shooter.setFlyWheelVoltage(0);
+    })
+
+    // THEN start aiming + spinning up (runs until interrupted)
+    .andThen(
+        new RunCommand(
+            () -> m_shooter.shootAtTarget(FieldPoints.getHubPosition(), m_robotDrive),
+            m_shooter
+        ).alongWith(
+            new RunCommand(
+                () -> m_robotDrive.turnToFieldPoint(
+                    FieldPoints.getHubPosition(),
+                    m_driverController
+                ),
+                m_robotDrive
+            )
+        )
+    )
+)
+.onFalse(
+    new RunCommand(
+        () -> m_shooter.setFlyWheelRPM(0),
+        m_shooter
+    ).alongWith(
+        new RunCommand(
+            () -> m_shooterDelivery.setDeliveryVoltage(0),
+            m_shooterDelivery
+        )
+    ).alongWith(
+        new RunCommand(
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true),
-            m_robotDrive)));
+                true
+            ),
+            m_robotDrive
+        )
+    )
+);
+
+
+m_driverController.leftTrigger().onTrue(
+    new RunCommand(
+        () -> {
+            m_shooterDelivery.setDeliveryVoltage(-10);
+            m_shooter.setFlyWheelVoltage(-10);
+        },
+        m_shooterDelivery, m_shooter
+    )
+    .withTimeout(0.15)
+
+    // Stop delivery after reverse
+    .andThen(() -> {
+        m_shooterDelivery.setDeliveryVoltage(0);
+        m_shooter.setFlyWheelVoltage(0);
+    })
+
+    // THEN aim + spin up (runs while held)
+    .andThen(
+        new RunCommand(
+            () -> m_shooter.shootAtTarget(
+                m_robotDrive.getShuttlePosition(),
+                m_robotDrive
+            ),
+            m_shooter
+        ).alongWith(
+            new RunCommand(
+                () -> m_robotDrive.turnToFieldPoint(
+                    m_robotDrive.getShuttlePosition(),
+                    m_driverController
+                ),
+                m_robotDrive
+            )
+        )
+    )
+).onFalse(
+    new RunCommand(
+        () -> m_shooter.setFlyWheelRPM(0),
+        m_shooter
+    ).alongWith(
+        new RunCommand(
+            () -> m_shooterDelivery.setDeliveryVoltage(0),
+            m_shooterDelivery
+        )
+    ).alongWith(
+        new RunCommand(
+            () -> m_robotDrive.drive(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                true
+            ),
+            m_robotDrive
+        )
+    )
+);
 
     m_driverController.rightBumper().onTrue(new RunCommand(
-          () -> m_delivery.stutter(Constants.DeliveryConstants.kDeliveryVoltage), m_delivery)
+          () -> m_delivery.setDeliveryVoltage(Constants.DeliveryConstants.kDeliveryVoltage), m_delivery)
           .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(Constants.ShooterConstants.kShooterDeliveryVoltage), m_shooterDelivery))
           ).onFalse(new RunCommand(
-          () -> m_delivery.stutter(0), m_delivery)
+          () -> m_delivery.setDeliveryVoltage(0), m_delivery)
           .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)));
 
     
@@ -184,20 +280,23 @@ public class RobotContainer {
 
 
     //intake
-    m_driverController.leftTrigger().onTrue(new RunCommand(
-      () -> m_intakeSpin.setIntakeVoltage(12), m_intake))
+    m_driverController.rightTrigger().onTrue(new RunCommand(
+      () -> m_intakeSpin.setIntakeVoltage(12), m_intake).alongWith(
+        new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(5), m_shooterDelivery)
+      ))
     .onFalse(new RunCommand(
-        () -> m_intakeSpin.setIntakeVoltage(0), m_intake));
+        () -> m_intakeSpin.setIntakeVoltage(0), m_intake).alongWith(
+        new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)));
     
     //clear blockage
     m_driverController.b().onTrue(new RunCommand(
       () -> m_intakeSpin.setIntakeVoltage(-12), m_intake)
-      .alongWith(new RunCommand(() -> m_delivery.stutter(-12)))
+      .alongWith(new RunCommand(() -> m_delivery.setDeliveryVoltage(-12)))
       .alongWith(new RunCommand(() -> m_shooter.setFlyWheelVoltage(-12)))
       .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(-12))))
     .onFalse(new RunCommand(
       () -> m_intakeSpin.setIntakeVoltage(0), m_intake)
-      .alongWith(new RunCommand(() -> m_delivery.stutter(0)))
+      .alongWith(new RunCommand(() -> m_delivery.setDeliveryVoltage(0)))
       .alongWith(new RunCommand(() -> m_shooter.setFlyWheelVoltage(0)))
       .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0))));
       // .onFalse(new RunCommand(() -> m_intake.setIntakeVoltage(0), m_intake))

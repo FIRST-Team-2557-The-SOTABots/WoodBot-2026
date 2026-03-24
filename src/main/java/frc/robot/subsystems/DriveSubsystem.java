@@ -115,10 +115,10 @@ public class DriveSubsystem extends SubsystemBase {
               // This will flip the path being followed to the red side of the field.
               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              // var alliance = DriverStation.getAlliance();
-              // if (alliance.isPresent()) {
-              //   return alliance.get() == DriverStation.Alliance.Red;
-              // }
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
               return false;
             },
             this // Reference to this subsystem to set requirements
@@ -276,6 +276,51 @@ public class DriveSubsystem extends SubsystemBase {
     // Rotate in place, field-relative
     drive(-controller.getLeftY(), -controller.getLeftX(), omega, true);
 }
+
+
+public void turnToFieldPointAuto(Translation2d target) {
+    Pose2d pose = getPose();
+
+    // Vector from robot to target
+    Translation2d diff =
+        target.minus(pose.getTranslation());
+
+    // Prevent undefined angle when on top of target
+    if (diff.getNorm() < 0.05) {
+        drive(0.0, 0.0, 0.0, true);
+        return;
+    }
+
+    // Desired robot heading
+    Rotation2d targetHeading = diff.getAngle();
+
+    // PID calculates shortest angular path
+    double omega =
+        m_turningController.calculate(
+            pose.getRotation().getRadians(),
+            targetHeading.getRadians()
+        );
+
+    // Clamp angular velocity
+    omega = MathUtil.clamp(
+        omega,
+        -DriveConstants.kMaxAngularSpeed,
+        DriveConstants.kMaxAngularSpeed
+    );
+
+    // Rotate in place, field-relative
+    drive(0, 0, omega, true);
+}
+
+  public Translation2d getShuttlePosition(){
+    if(m_poseEstimator.getEstimatedPosition().getY() > 4){
+      System.out.println("out");
+      return FieldPoints.getShuttleOutpost();
+    } else {
+      System.out.println("depot");
+      return FieldPoints.getDepotShuttle();
+    }
+  }
 
   public boolean isAtTurnTarget(){
     return m_turningController.atSetpoint();

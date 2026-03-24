@@ -113,22 +113,23 @@ public final class Constants {
 
   public static final class FieldConstants {
     public static final class Red {
-      public static final Translation2d kHubPosition = new Translation2d(11.92, 4.04);
-      public static final Translation2d kShuttleDepot = new Translation2d(4.115, 4.01);
-      public static final Translation2d kShuttleOutpost = new Translation2d(8.23, 4.01);
+      public static final Translation2d kHubPosition = new Translation2d(11.92, 4.0);
+      public static final Translation2d kShuttleDepot = new Translation2d(14.3, 2.0);
+      public static final Translation2d kShuttleOutpost = new Translation2d(14.3, 6.0);
     }
     public static final class Blue {
-      public static final Translation2d kHubPosition = new Translation2d(4.63, 4.04);
-      public static final Translation2d kShuttleDepot = new Translation2d(4.115, 4.01);
-      public static final Translation2d kShuttleOutpost = new Translation2d(8.23, 4.01);
+      public static final Translation2d kHubPosition = new Translation2d(4.63, 4.0);
+      public static final Translation2d kShuttleDepot = new Translation2d(2.5, 2.0);
+      public static final Translation2d kShuttleOutpost = new Translation2d(2.5, 6.0
+      );
     }
   }
 
   public static final class ShooterConstants {
-    public static final int kShooterFlyWheelLeftCanId = 12;
-    public static final int kShooterFlyWheelMiddleCanId = 13;
-    public static final int kShooterFlyWheelRightCanId = 14;
-    public static final int kShooterFlyWheelOtherCanId = 18;
+    public static final int kShooterFlyWheel1CanId = 12;
+    public static final int kShooterFlyWheel2CanId = 13;
+    public static final int kShooterFlyWheel3CanId = 14;
+    public static final int kShooterFlyWheel4CanId = 18;
 
     public static final int kShooterDeliveryCanId = 15;
 
@@ -136,7 +137,7 @@ public final class Constants {
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
     public static final double kShooterDeliveryVoltage = 12.0;
 
-    public static final double kFlyWheelP = 0.005; 
+    public static final double kFlyWheelP = 0.004; 
     public static final double kFlyWheelI = 0;
     public static final double kFlyWheelD = 0.0;
     public static final double kFlyWheelToleranceRPM = 50.0; 
@@ -147,24 +148,26 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap kFlywheelRPMMap = new InterpolatingDoubleTreeMap();
     static {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs
-      kFlywheelRPMMap.put(1.5,2750.0);
-      kFlywheelRPMMap.put(2.0, 3125.0);
-      kFlywheelRPMMap.put(2.5, 3275.0);
-      kFlywheelRPMMap.put(3.0, 3500.0);
-      kFlywheelRPMMap.put(3.5, 3550.0);
-      kFlywheelRPMMap.put(4.0, 3700.0);
+      kFlywheelRPMMap.put(1.2,3200.0);
+      kFlywheelRPMMap.put(1.5,3300.0);
+      kFlywheelRPMMap.put(1.75,3400.0);
+      kFlywheelRPMMap.put(2.0, 3600.0);
+      kFlywheelRPMMap.put(2.5, 4100.0);
+      kFlywheelRPMMap.put(3.0, 4400.0);
+      kFlywheelRPMMap.put(3.5, 5800.0);
+      kFlywheelRPMMap.put(4.0, 6200.0);
     }
 
     public static final InterpolatingDoubleTreeMap kFlywheelMap = new InterpolatingDoubleTreeMap();
     static {
-      // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs  
-      kFlywheelMap.put(-3000.0, -6.0);
+      // Populate the flywheel RPM map with voltage to flywheel RPM pairs  
       kFlywheelMap.put(0.0, 0.0);
-      kFlywheelMap.put(1025.0, 2.0);
-      kFlywheelMap.put(2145.0, 4.0);
-      kFlywheelMap.put(3260.0, 6.0);
-      kFlywheelMap.put(4270.0, 8.0);
-      kFlywheelMap.put(5000.0, 9.0);
+      kFlywheelMap.put(1070.0, 2.0);
+      kFlywheelMap.put(2175.0, 4.0);
+      kFlywheelMap.put(3295.0, 6.0);
+      kFlywheelMap.put(4400.0, 8.0);
+      kFlywheelMap.put(5505.0, 10.0);
+      kFlywheelMap.put(6075.0, 12.0);
     }
   }
 
@@ -177,13 +180,13 @@ public final class Constants {
     public static final double kIntakeROTkD = 0.0;
 
     public static final double kIntakeRestingPosition = 0.0;
-    public static final double kIntakeDeployedPosition = 1.0;
+    public static final double kIntakeDeployedPosition = 00;
     public static final double kIntakeClimbingPosition = 0.5;
     public static final double kIntakeTrenchPosition = 0.25;
 
     public static final class IntakePosition {
-      public static final double kGround = 0.16;
-      public static final double kStowed = 0.56;
+      public static final double kGround = 0.822;
+      public static final double kStowed = 0.141;
       public static final double kClimbing = 0.5;
       public static final double kTrench = 0.25;
     }
