@@ -69,6 +69,7 @@ public final class Configs {
         public static final SparkFlexConfig ShooterFlyWheelRightConfig = new SparkFlexConfig();
         public static final SparkFlexConfig ShooterFlyWheelOtherConfig = new SparkFlexConfig();
         public static final SparkFlexConfig ShooterDeliveryConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig ShooterDelivery2Config = new SparkFlexConfig();
 
         static {
             ShooterFlyWheelLeftConfig
@@ -100,6 +101,7 @@ public final class Configs {
 
     public static final class IntakeConfigs {
         public static final SparkFlexConfig intakeConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig intakeConfig2 = new SparkFlexConfig();
         public static final SparkMaxConfig intakeROTConfig = new SparkMaxConfig();
 
         static {

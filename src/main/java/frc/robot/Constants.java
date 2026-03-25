@@ -131,7 +131,8 @@ public final class Constants {
     public static final int kShooterFlyWheel3CanId = 14;
     public static final int kShooterFlyWheel4CanId = 18;
 
-    public static final int kShooterDeliveryCanId = 15;
+    public static final int kShooterDelivery1CanId = 15;
+    public static final int kShooterDelivery2CanId = 16;
 
     
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
@@ -143,8 +144,15 @@ public final class Constants {
     public static final double kFlyWheelToleranceRPM = 50.0; 
 
     
-    
-
+    //im porrammging
+    /*  
+     * for(long i = 0; i < 9223372036854775807; i++){
+     * if(i == 9223372036854775806){
+     * System.exit(0);
+     * }     * 
+     * }
+     */
+    //shhhhhhhh
     public static final InterpolatingDoubleTreeMap kFlywheelRPMMap = new InterpolatingDoubleTreeMap();
     static {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs
@@ -172,6 +180,7 @@ public final class Constants {
   }
 
   public static final class  IntakeConstants {
+    public static final int kIntakeIntake2CanId = 17;
     public static final int kIntakeIntakeCanId = 10;
     public static final int kIntakeROTCanId = 9;
 
