@@ -261,6 +261,17 @@ m_driverController.leftTrigger().onTrue(
           () -> m_delivery.setDeliveryVoltage(0), m_delivery)
           .alongWith(new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(0), m_shooterDelivery)));
 
+
+    //set flywheel to max voltage for debugging/failsafe
+    m_driverController.y().onTrue(new RunCommand(
+          () -> m_shooter.setFlyWheelRPM(3500), m_shooter))
+          .onFalse(new RunCommand((() -> m_shooter.setFlyWheelRPM(0)), m_shooter));
+
+        //set flywheel to max voltage for debugging/failsafe
+    m_driverController.x().onTrue(new RunCommand(
+          () -> m_shooter.setFlyWheelRPM(2), m_shooter))
+          .onFalse(new RunCommand((() -> m_shooter.setFlyWheelVoltage(0)), m_shooter));
+
     
     // Reset heading
     m_driverController.start().onTrue(Commands.runOnce(
@@ -282,7 +293,7 @@ m_driverController.leftTrigger().onTrue(
     //intake
     m_driverController.rightTrigger().onTrue(new RunCommand(
       () -> m_intakeSpin.setIntakeVoltage(12), m_intake).alongWith(
-        new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(5), m_shooterDelivery)
+        new RunCommand(() -> m_shooterDelivery.setDeliveryVoltage(3), m_shooterDelivery)
       ))
     .onFalse(new RunCommand(
         () -> m_intakeSpin.setIntakeVoltage(0), m_intake).alongWith(

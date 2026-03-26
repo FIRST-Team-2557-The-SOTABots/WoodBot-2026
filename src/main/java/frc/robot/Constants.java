@@ -138,7 +138,7 @@ public final class Constants {
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
     public static final double kShooterDeliveryVoltage = 12.0;
 
-    public static final double kFlyWheelP = 0.004; 
+    public static final double kFlyWheelP = .002; 
     public static final double kFlyWheelI = 0;
     public static final double kFlyWheelD = 0.0;
     public static final double kFlyWheelToleranceRPM = 50.0; 

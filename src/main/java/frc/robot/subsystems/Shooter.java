@@ -168,6 +168,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("requested shooter RPM", targetRPM);
     SmartDashboard.putNumber("shooter RPM", getFlyWheelVelocity());
     SmartDashboard.putNumber("shooter voltage", voltage);
+    SmartDashboard.putNumber("Shooter PID Voltatge", voltage);
+    SmartDashboard.putNumber("Shooter Hold Voltage", holdVoltage);
     if(targetRPM == 0){
 
       shooterFlyWheelLeft.setVoltage(0);
@@ -184,7 +186,7 @@ public class Shooter extends SubsystemBase {
 
       shooterFlyWheelLeft.setVoltage(voltage + holdVoltage);
       shooterFlyWheelMiddle.setVoltage(voltage + holdVoltage);
-      shooterFlyWheelRight.setVoltage(voltage + holdVoltage);
+      shooterFlyWheelRight.setVoltage((voltage + holdVoltage));
       shooterFlyWheelOther.setVoltage(voltage + holdVoltage);
     }
     // This method will be called once per scheduler run
