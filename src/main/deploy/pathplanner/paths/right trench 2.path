@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 3.832030661601209,
-        "y": 0.6053126033555503
+        "y": 0.6053126033555504
       },
       "isLocked": false,
       "linkedName": null
@@ -40,20 +40,20 @@
         "y": 0.43025641025641104
       },
       "nextControl": {
-        "x": 2.8982967985833574,
-        "y": 0.874311896513247
+        "x": 2.8982967985833556,
+        "y": 0.8743118965132488
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.076068376068376,
-        "y": 1.528475783475784
+        "x": 3.346285714285715,
+        "y": 2.156214285714285
       },
       "prevControl": {
-        "x": 2.8047435897435893,
-        "y": 1.218390313390314
+        "x": 3.0749609279609285,
+        "y": 1.846128815628815
       },
       "nextControl": null,
       "isLocked": false,
@@ -84,8 +84,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StoppyMcStopFace",
-      "waypointRelativePos": 0,
+      "name": "IntakeBall",
+      "waypointRelativePos": 1.1225806451613036,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -93,6 +93,12 @@
           "name": "StoppyMcStopFace"
         }
       }
+    },
+    {
+      "name": "StoppyMcStopFace",
+      "waypointRelativePos": 2.8674937965260194,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {

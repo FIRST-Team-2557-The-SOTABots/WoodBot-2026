@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.830712250712249,
-        "y": 3.634472934472935
+        "x": 7.094259259259258,
+        "y": 3.9833190883190888
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.525769230769231,
-        "y": 3.6732336182336187
+        "x": 5.789316239316239,
+        "y": 4.022079772079772
       },
       "isLocked": false,
       "linkedName": null
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "StoppyMcStopFace",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.8357320099255346,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

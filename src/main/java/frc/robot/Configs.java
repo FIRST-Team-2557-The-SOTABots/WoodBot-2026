@@ -74,7 +74,7 @@ public final class Configs {
         static {
             ShooterFlyWheelLeftConfig
                 .idleMode(IdleMode.kCoast)
-                .inverted(false)
+                .inverted(true)
                 .smartCurrentLimit(40);
 
             ShooterFlyWheelMiddleConfig

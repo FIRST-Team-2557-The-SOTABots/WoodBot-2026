@@ -136,9 +136,9 @@ public final class Constants {
 
     
     public static final double kProjectileSpeedMetersPerSecond = 15.0;
-    public static final double kShooterDeliveryVoltage = 12.0;
+    public static final double kShooterDeliveryVoltage = 10.0;
 
-    public static final double kFlyWheelP = .002; 
+    public static final double kFlyWheelP = .004; 
     public static final double kFlyWheelI = 0;
     public static final double kFlyWheelD = 0.0;
     public static final double kFlyWheelToleranceRPM = 50.0; 
@@ -158,10 +158,9 @@ public final class Constants {
       // Populate the flywheel RPM map with distance (in meters) to flywheel RPM pairs
       kFlywheelRPMMap.put(1.2,3200.0);
       kFlywheelRPMMap.put(1.5,3300.0);
-      kFlywheelRPMMap.put(1.75,3400.0);
-      kFlywheelRPMMap.put(2.0, 3600.0);
+      kFlywheelRPMMap.put(2.0, 3900.0);
       kFlywheelRPMMap.put(2.5, 4100.0);
-      kFlywheelRPMMap.put(3.0, 4400.0);
+      kFlywheelRPMMap.put(3.0, 4600.0);
       kFlywheelRPMMap.put(3.5, 5800.0);
       kFlywheelRPMMap.put(4.0, 6200.0);
     }

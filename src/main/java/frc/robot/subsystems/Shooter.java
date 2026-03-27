@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -48,6 +49,7 @@ public class Shooter extends SubsystemBase {
   private double holdVoltage;
   private double voltage;
   private InterpolatingDoubleTreeMap kFlywheelMap;
+  private boolean forward = true;
 
   /** Creates a new Shooter. */
   public Shooter(DriveSubsystem kDrive) {
@@ -113,8 +115,9 @@ public class Shooter extends SubsystemBase {
   }
 
   // Set the voltage of the flywheel motors to control the speed of the flywheels
-  public void setFlyWheelRPM(double targetRPM) {
+  public void setFlyWheelRPM(double targetRPM, boolean forward) {
     this.targetRPM = targetRPM;
+    this.forward = forward;
   }
 
   public double getHoldVoltage(){
@@ -131,7 +134,7 @@ public class Shooter extends SubsystemBase {
   public void shootAtTarget(Translation2d point, DriveSubsystem m_drive){
     double distance = m_drive.getPose().getTranslation().getDistance(point);
     double targetRPM = Constants.ShooterConstants.kFlywheelRPMMap.get(distance);
-    setFlyWheelRPM(targetRPM);
+    setFlyWheelRPM(targetRPM, true);
   }
 
 
@@ -170,6 +173,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("shooter voltage", voltage);
     SmartDashboard.putNumber("Shooter PID Voltatge", voltage);
     SmartDashboard.putNumber("Shooter Hold Voltage", holdVoltage);
+    SmartDashboard.putBoolean("forward", forward);
     if(targetRPM == 0){
 
       shooterFlyWheelLeft.setVoltage(0);
@@ -177,7 +181,7 @@ public class Shooter extends SubsystemBase {
       shooterFlyWheelRight.setVoltage(0);
       shooterFlyWheelOther.setVoltage(0);
       
-    } else {
+    } else if(forward = true) {
       voltage = Math.max(-12.0, Math.min(
         12.0, shooterFlyWheelPIDController.calculate(
           getFlyWheelVelocity(), targetRPM)));
@@ -188,6 +192,18 @@ public class Shooter extends SubsystemBase {
       shooterFlyWheelMiddle.setVoltage(voltage + holdVoltage);
       shooterFlyWheelRight.setVoltage((voltage + holdVoltage));
       shooterFlyWheelOther.setVoltage(voltage + holdVoltage);
+    } else {
+      voltage = Math.max(-12.0, Math.min(
+        12.0, shooterFlyWheelPIDController.calculate(
+          getFlyWheelVelocity(), targetRPM)));
+
+      holdVoltage = Constants.ShooterConstants.kFlywheelMap.get(targetRPM);
+
+      shooterFlyWheelLeft.setVoltage((voltage + holdVoltage)  * -1);
+      shooterFlyWheelMiddle.setVoltage((voltage + holdVoltage)  * -1);
+      shooterFlyWheelRight.setVoltage((voltage + holdVoltage)  * -1);
+      shooterFlyWheelOther.setVoltage((voltage + holdVoltage)  * -1);
+      
     }
     // This method will be called once per scheduler run
   }

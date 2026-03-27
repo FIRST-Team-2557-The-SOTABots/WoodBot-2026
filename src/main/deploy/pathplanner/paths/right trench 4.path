@@ -89,7 +89,7 @@
   "eventMarkers": [
     {
       "name": "StoppyMcStopFace",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 1.6526054590570742,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

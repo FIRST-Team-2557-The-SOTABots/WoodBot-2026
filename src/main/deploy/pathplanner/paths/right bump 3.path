@@ -3,43 +3,83 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9251785714285723,
-        "y": 2.5881190476190477
+        "x": 2.7918233618233614,
+        "y": 2.4974928774928786
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1636234228720506,
-        "y": 1.7958322140762877
+        "x": 2.300854700854701,
+        "y": 2.4716524216524216
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.23657142857142954,
-        "y": 0.3854047619047628
+        "x": 6.013297619047619,
+        "y": 2.3181785714285708
       },
       "prevControl": {
-        "x": -0.013428571428570457,
-        "y": 0.3854047619047628
+        "x": 4.372428673178673,
+        "y": 2.176056064306064
+      },
+      "nextControl": {
+        "x": 6.286354716923635,
+        "y": 2.3418291862052336
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.132071428571429,
+        "y": 4.348130952380952
+      },
+      "prevControl": {
+        "x": 6.18375234025234,
+        "y": 3.9346836589336585
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.11940298507462672,
+      "rotationDegrees": 45.0
+    },
+    {
+      "waypointRelativePos": 0.7718550106609836,
+      "rotationDegrees": 35.905372128476564
+    },
+    {
+      "waypointRelativePos": 1.1897654584221748,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StoppyMcStopFace",
-      "waypointRelativePos": 0.15186104218362034,
+      "name": "IntakeOut",
+      "waypointRelativePos": 0.7364764267990044,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "StoppyMcStopFace"
+          "name": "IntakeOut"
+        }
+      }
+    },
+    {
+      "name": "IntakeBall",
+      "waypointRelativePos": 0.9548387096774176,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeBall"
         }
       }
     }
@@ -54,13 +94,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.30130561701655
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 37.69424046668907
+    "rotation": 54.78021311092894
   },
   "useDefaultConstraints": true
 }
