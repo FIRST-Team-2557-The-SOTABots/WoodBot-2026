@@ -5,34 +5,53 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "center shoot"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "depot 1 red"
+                  "waitTime": 2.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeBall"
+                  "name": "Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeOut"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Depot 2 red"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Delivery slow"
+                }
+              }
+            ]
           }
         },
         {
@@ -40,21 +59,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "ShootyMcShootFace"
+                  "waitTime": 5.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterDeliveryIn"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "DeliveryIn"
+                  "name": "StoppyMcStopFace"
                 }
               }
             ]
