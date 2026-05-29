@@ -131,6 +131,7 @@ public final class Constants {
     public static final int kShooterFlyWheel3CanId = 14;
     public static final int kShooterFlyWheel4CanId = 18;
 
+    /* Feeder, NOT SHOOTER DELIVERY */
     public static final int kShooterDelivery1CanId = 15;
     public static final int kShooterDelivery2CanId = 16;
 
@@ -179,8 +180,9 @@ public final class Constants {
   }
 
   public static final class  IntakeConstants {
-    public static final int kIntakeIntake2CanId = 17;
-    public static final int kIntakeIntakeCanId = 10;
+    /* CHANGE NAMES!!! */
+    public static final int kIntakeIntake2CanId = 17; // Left intake
+    public static final int kIntakeIntakeCanId = 10; // Right intake
     public static final int kIntakeROTCanId = 9;
 
     public static final double kIntakeROTkP = 0.8;
@@ -202,7 +204,7 @@ public final class Constants {
   }
 
   public static final class DeliveryConstants {
-    public static final int kDeliveryCanId = 11;
+    public static final int kDeliveryCanId = 11; // Hot dog delivery
     public static final double kDeliveryVoltage = -10.0;
   }
 
