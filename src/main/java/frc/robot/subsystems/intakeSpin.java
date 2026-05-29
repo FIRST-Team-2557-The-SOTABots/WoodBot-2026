@@ -42,7 +42,8 @@ public class intakeSpin extends SubsystemBase {
       intakeConfig2,
      ResetMode.kNoResetSafeParameters,
      PersistMode.kPersistParameters);
-    intakeConfig2.inverted(true);
+    intakeConfig2.inverted(true)
+    .smartCurrentLimit(80);
 
   }
 

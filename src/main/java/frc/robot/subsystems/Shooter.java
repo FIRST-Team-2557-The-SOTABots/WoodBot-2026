@@ -174,6 +174,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter PID Voltatge", voltage);
     SmartDashboard.putNumber("Shooter Hold Voltage", holdVoltage);
     SmartDashboard.putBoolean("forward", forward);
+    SmartDashboard.putBoolean("shoot", isAtSetpoint());
     if(targetRPM == 0){
 
       shooterFlyWheelLeft.setVoltage(0);

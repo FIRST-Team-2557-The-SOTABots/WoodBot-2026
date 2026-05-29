@@ -66,6 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
+  private final double trim = 0;
+
   private final PIDController m_turningController = new PIDController(
     DriveConstants.kTurningP, DriveConstants.kTurningI, DriveConstants.kTurningD);
   
@@ -263,7 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
     double omega =
         m_turningController.calculate(
             pose.getRotation().getRadians(),
-            targetHeading.getRadians()
+            targetHeading.getRadians() + (trim*0.0174533)
         );
 
     // Clamp angular velocity
